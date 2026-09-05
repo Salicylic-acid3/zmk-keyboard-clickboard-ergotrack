@@ -1,0 +1,4 @@
+name: clickboard_ergotrack
+build:
+  settings:
+    board_root: .

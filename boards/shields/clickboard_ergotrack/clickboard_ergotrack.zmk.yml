@@ -1,0 +1,9 @@
+file_format: "1"
+id: clickboard_ergotrack
+name: clickboard-ergotrack
+type: shield
+features:
+  - keys
+siblings:
+  - clickboard_ergotrack_left
+  - clickboard_ergotrack_right

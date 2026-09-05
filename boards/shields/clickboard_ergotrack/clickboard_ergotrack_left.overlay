@@ -1,0 +1,71 @@
+#include "clickboard_ergotrack.dtsi"
+
+#include <dt-bindings/pinctrl/nrf-pinctrl.h>
+
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/ {
+    split_inputs {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        pointing_device_split: pointing_device_split@0 {
+            compatible = "zmk,input-split";
+            reg = <0>;
+            device = <&trackpad>;
+        };
+    };
+};
+
+&kscan0 {
+    diode-direction = "col2row";
+    row-gpios = <&akdk_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        <&akdk_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        <&akdk_d 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        <&akdk_d 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        <&akdk_d 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
+        <&akdk_d 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+    col-gpios = <&akdk_d 3 (GPIO_ACTIVE_HIGH)>,
+        <&akdk_d 11 (GPIO_ACTIVE_HIGH)>,
+        <&akdk_d 13 (GPIO_ACTIVE_HIGH)>,
+        <&akdk_d 14 (GPIO_ACTIVE_HIGH)>,
+        <&akdk_d 15 (GPIO_ACTIVE_HIGH)>,
+        <&akdk_d 16 (GPIO_ACTIVE_HIGH)>;
+    wakeup-source;
+};
+
+&pinctrl {
+    i2c0_default: i2c0_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 12)>,
+                    <NRF_PSEL(TWIM_SCL, 1, 9)>;
+            bias-pull-up;
+        };
+    };
+
+    i2c0_sleep: i2c0_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 12)>,
+                    <NRF_PSEL(TWIM_SCL, 1, 9)>;
+            bias-pull-up;
+            low-power-enable;
+        };
+    };
+};
+
+&i2c0 {
+    status = "okay";
+    compatible = "nordic,nrf-twim";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-names = "default", "sleep";
+    clock-frequency = <I2C_BITRATE_FAST>;
+    zephyr,concat-buf-size = <32>;
+
+    trackpad: trackpad@56 {
+        status = "okay";
+        compatible = "azoteq,iqs9151";
+        reg = <0x56>;
+        irq-gpios = <&gpio0 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; 
+    };
+};
