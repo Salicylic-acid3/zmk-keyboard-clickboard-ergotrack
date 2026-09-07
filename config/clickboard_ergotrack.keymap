@@ -102,6 +102,7 @@
             &kp F15        /* pos75 3本指スワイプ BTN_5 */
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
             &mo 1          /* pos77 左パッドに触れている間レイヤー1 */
+            &kp LGUI       /* pos78 左パッド2本指 = Cmd押しっぱなし → Cmd+ホイールでズーム */
             >;
         };
 
@@ -109,6 +110,7 @@
         two_hand_layer {
             display-name = "2-Hand";
             bindings = <
+            &trans
             &trans
             &trans
             &trans

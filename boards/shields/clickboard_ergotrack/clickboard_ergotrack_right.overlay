@@ -14,12 +14,21 @@
         };
     };
 
+    /* REL_X/Y を listener が無視するコードへ付け替えてカーソル移動を捨てる */
+    zip_xy_drop: zip_xy_drop {
+        compatible = "zmk,input-processor-code-mapper";
+        #input-processor-cells = <0>;
+        type = <INPUT_EV_REL>;
+        map = <INPUT_REL_X INPUT_REL_MISC>
+            , <INPUT_REL_Y INPUT_REL_MISC>;
+    };
+
     /* ジェスチャーのBTNイベントを仮想キー位置へ流し直す(元のマウスボタン出力は中和) */
     trackpad_gestures: trackpad_gestures {
         compatible = "zmk,input-processor-behaviors-consume";
         #input-processor-cells = <0>;
         type = <INPUT_EV_KEY>;
-        codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6 INPUT_BTN_8>;
+        codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6 INPUT_BTN_8 INPUT_BTN_9>;
         bindings = <
             &tp_to_pos 72
             &tp_to_pos 73
@@ -27,6 +36,7 @@
             &tp_to_pos 75
             &tp_to_pos 76
             &tp_to_pos 77
+            &tp_to_pos 78
         >;
     };
 
@@ -73,6 +83,20 @@
             &zip_dynamic_xy_scaler
         >;
         status = "okay";
+
+        /* レイヤー1(=左パッドに触れている)のあいだは、左パッドのカーソル移動を捨てる。
+           自分自身の2本指スクロールは通したままにする */
+        two_hand_modifier {
+            layers = <1>;
+            input-processors = <
+                &trackpad_gestures
+                &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
+                &zip_scroll_scaler 1 16
+                &zip_dynamic_scroll_scaler
+                &zip_xy_drop
+            >;
+        };
     };
 
     trackpad_listener {
@@ -98,7 +122,7 @@
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
                 &zip_xy_transform INPUT_TRANSFORM_Y_INVERT
                 &zip_xy_to_scroll_mapper
-                &zip_scroll_scaler 1 16
+                &zip_scroll_scaler 1 16   /* ← 両手スクロールの速度調整はこの 16 を変える */
                 &zip_dynamic_scroll_scaler
             >;
         };
