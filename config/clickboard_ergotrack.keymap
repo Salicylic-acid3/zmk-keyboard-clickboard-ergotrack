@@ -1,8 +1,22 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <dt-bindings/zmk/zip_dynamic_scale.h>
 
 / {
+    behaviors {
+        /* 実行中にポインタ/スクロール速度を変えるビヘイビア */
+        zip_dyn_scale: zip_dyn_scale {
+            compatible = "zmk,behavior-zip-dynamic-scale";
+            #binding-cells = <2>;
+        };
+
+        zip_dyn_scale_set: zip_dyn_scale_set {
+            compatible = "zmk,behavior-zip-dynamic-scale-set";
+            #binding-cells = <2>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
         default_layer {
@@ -68,9 +82,9 @@
             &kp SPACE      /* RC(10,0) Space */
             &kp SPACE      /* RC(10,1) Space */
             &kp SPACE      /* RC(10,2) Space */
-            &trans         /* RC(10,3) (unassigned) */
-            &trans         /* RC(10,4) (unassigned) */
-            &trans         /* RC(10,5) (unassigned) */
+            &zip_dyn_scale ZDS_XY ZDS_DEC   /* RC(10,3) カーソル速度 - */
+            &zip_dyn_scale ZDS_XY ZDS_INC   /* RC(10,4) カーソル速度 + */
+            &zip_dyn_scale ZDS_ALL ZDS_RST  /* RC(10,5) 速度リセット */
             &kp DOWN       /* RC(5,1) Dows */
             &mkp LCLK      /* RC(5,3) Left Click */
             &mkp MCLK      /* RC(5,4) Middle Click */
@@ -78,7 +92,7 @@
             &mkp LCLK      /* RC(11,0) Left Click */
             &mkp MCLK      /* RC(11,1) Middle Click */
             &mkp RCLK      /* RC(11,2) Right Click */
-            &trans         /* RC(11,4) (unassigned) */
+            &zip_dyn_scale ZDS_SC ZDS_INC   /* RC(11,4) スクロール速度 + */
             >;
         };
     };
