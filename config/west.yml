@@ -2,13 +2,15 @@ manifest:
   remotes:
     - name: sekigon-gonnoc
       url-base: https://github.com/sekigon-gonnoc
+    - name: salicylic-acid3
+      url-base: https://github.com/Salicylic-acid3
   projects:
     - name: zmk
       url: https://github.com/zmkfirmware/zmk
       revision: main
       import: app/west.yml
     - name: zmk-driver-iqs9151
-      remote: sekigon-gonnoc
+      remote: salicylic-acid3
       revision: ergotrack
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc

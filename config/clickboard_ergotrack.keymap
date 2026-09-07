@@ -20,6 +20,7 @@
     keymap {
         compatible = "zmk,keymap";
         default_layer {
+            display-name = "Base";
             bindings = <
             &kp ESC        /* RC(0,0) Esc */
             &kp N1         /* RC(0,1) 1 */
@@ -93,7 +94,107 @@
             &mkp MCLK      /* RC(11,1) Middle Click */
             &mkp RCLK      /* RC(11,2) Right Click */
             &zip_dyn_scale ZDS_SC ZDS_INC   /* RC(11,4) スクロール速度 + */
+
+            /* --- ジェスチャー用の仮想キー(Studioで自由に割り当て可) --- */
+            &kp LCTRL      /* pos72 ピンチ中Ctrl押しっぱなし = Ctrl+ホイールでズーム */
+            &kp F13        /* pos73 3本指スワイプ BTN_3 */
+            &kp F14        /* pos74 3本指スワイプ BTN_4 */
+            &kp F15        /* pos75 3本指スワイプ BTN_5 */
+            &kp F16        /* pos76 3本指スワイプ BTN_6 */
+            &mo 1          /* pos77 左パッドに触れている間レイヤー1 */
             >;
         };
+
+        /* 左パッド操作中に有効になるレイヤー。キーは全て透過なので通常のタイピングに影響しない */
+        two_hand_layer {
+            display-name = "2-Hand";
+            bindings = <
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            >;
+        };
+
+        /* ZMK Studio から使うための空きレイヤー枠 */
+        extra1 { status = "reserved"; };
+        extra2 { status = "reserved"; };
+        extra3 { status = "reserved"; };
+        extra4 { status = "reserved"; };
+        extra5 { status = "reserved"; };
     };
 };

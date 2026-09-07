@@ -13,7 +13,7 @@
 
     default_transform: keymap_transform {
         compatible = "zmk,matrix-transform";
-        rows = <6>;
+        rows = <7>;   /* 6行が実マトリクス、7行目はジェスチャー用の仮想位置 */
         columns = <12>;
         map = <
             RC(0,0)  /* 0,0 */
@@ -88,6 +88,14 @@
             RC(5,7)  /* 11,1 */
             RC(5,8)  /* 11,2 */
             RC(5,10)  /* 11,4 */
+
+            /* --- kscanが絶対に出せない行6 = ジェスチャー用の仮想キー --- */
+            RC(6,0)  /* pos72: ピンチ (BTN_7) */
+            RC(6,1)  /* pos73: 3本指スワイプ BTN_3 */
+            RC(6,2)  /* pos74: 3本指スワイプ BTN_4 */
+            RC(6,3)  /* pos75: 3本指スワイプ BTN_5 */
+            RC(6,4)  /* pos76: 3本指スワイプ BTN_6 */
+            RC(6,5)  /* pos77: 左パッドのタッチ状態 (BTN_8) */
         >;
     };
 };

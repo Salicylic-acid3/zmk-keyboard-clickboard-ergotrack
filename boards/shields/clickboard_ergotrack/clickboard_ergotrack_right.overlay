@@ -6,6 +6,30 @@
 #include <dt-bindings/zmk/zip_dynamic_scale.h>
 
 / {
+    behaviors {
+        /* トラックパッドのジェスチャーを仮想キー位置の押下に変換する */
+        tp_to_pos: tp_to_pos {
+            compatible = "zmk,behavior-trackpad-to-pos";
+            #binding-cells = <1>;
+        };
+    };
+
+    /* ジェスチャーのBTNイベントを仮想キー位置へ流し直す(元のマウスボタン出力は中和) */
+    trackpad_gestures: trackpad_gestures {
+        compatible = "zmk,input-processor-behaviors-consume";
+        #input-processor-cells = <0>;
+        type = <INPUT_EV_KEY>;
+        codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6 INPUT_BTN_8>;
+        bindings = <
+            &tp_to_pos 72
+            &tp_to_pos 73
+            &tp_to_pos 74
+            &tp_to_pos 75
+            &tp_to_pos 76
+            &tp_to_pos 77
+        >;
+    };
+
     /* 実行時に倍率を変えられるスケーラ(値はsettingsに保存され再起動後も維持) */
     zip_dynamic_xy_scaler: zip_dynamic_xy_scaler {
         compatible = "zmk,input-processor-dynamic-scaler";
@@ -39,6 +63,7 @@
         compatible = "zmk,input-listener";
         device = <&pointing_device_split>;
         input-processors = <
+            &trackpad_gestures
             &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
             &zip_xy_transform INPUT_TRANSFORM_X_INVERT
             &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
@@ -54,6 +79,7 @@
         compatible = "zmk,input-listener";
         device = <&trackpad>;
         input-processors = <
+            &trackpad_gestures
             &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
             &zip_xy_transform INPUT_TRANSFORM_Y_INVERT
             &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
@@ -63,6 +89,19 @@
             &zip_dynamic_xy_scaler
         >;
         status = "okay"; 
+
+        /* レイヤー1(=左パッド操作中)のあいだは、右パッドの移動をスクロールに変換 */
+        two_hand_scroll {
+            layers = <1>;
+            input-processors = <
+                &trackpad_gestures
+                &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_xy_transform INPUT_TRANSFORM_Y_INVERT
+                &zip_xy_to_scroll_mapper
+                &zip_scroll_scaler 1 16
+                &zip_dynamic_scroll_scaler
+            >;
+        };
     };
 };
 
