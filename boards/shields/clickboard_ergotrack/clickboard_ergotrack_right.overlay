@@ -84,9 +84,9 @@
         >;
         status = "okay";
 
-        /* レイヤー2(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
+        /* レイヤー3(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
         drag_mode {
-            layers = <2>;
+            layers = <3>;
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
@@ -99,10 +99,10 @@
             >;
         };
 
-        /* レイヤー1(=左パッドに触れている)のあいだは、左パッドのカーソル移動を捨てる。
+        /* レイヤー2(=左パッドに触れている)のあいだは、左パッドのカーソル移動を捨てる。
            自分自身の2本指スクロールは通したままにする */
         two_hand_modifier {
-            layers = <1>;
+            layers = <2>;
             input-processors = <
                 &trackpad_gestures
                 &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
@@ -129,9 +129,9 @@
         >;
         status = "okay"; 
 
-        /* レイヤー2(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
+        /* レイヤー3(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
         drag_mode {
-            layers = <2>;
+            layers = <3>;
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
@@ -144,9 +144,9 @@
             >;
         };
 
-        /* レイヤー1(=左パッド操作中)のあいだは、右パッドの移動をスクロールに変換 */
+        /* レイヤー2(=左パッド操作中)のあいだは、右パッドの移動をスクロールに変換 */
         two_hand_scroll {
-            layers = <1>;
+            layers = <2>;
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP

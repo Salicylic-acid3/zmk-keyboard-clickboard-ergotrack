@@ -17,15 +17,15 @@
             #binding-cells = <2>;
         };
 
-        /* 左クリックを押している間だけレイヤー2(ドラッグ)も有効にする。
+        /* 左クリックを押している間だけレイヤー3(ドラッグ)も有効にする。
            これでドラッグ中は両手連携モードが割り込まなくなり、反対側の
            パッドでもカーソルを動かせる = ドラッグの引き継ぎができる */
         drag_lclk: drag_lclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_press &mkp LCLK &mo 2>
+            bindings = <&macro_press &mkp LCLK &mo 3>
                      , <&macro_pause_for_release>
-                     , <&macro_release &mkp LCLK &mo 2>;
+                     , <&macro_release &mkp LCLK &mo 3>;
         };
     };
 
@@ -113,12 +113,98 @@
             &kp F14        /* pos74 3本指スワイプ BTN_4 */
             &kp F15        /* pos75 3本指スワイプ BTN_5 */
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
-            &mo 1          /* pos77 左パッドに触れている間レイヤー1 */
+            &mo 2          /* pos77 左パッドに触れている間レイヤー2(両手連携) */
             &kp LGUI       /* pos78 左パッド2本指 = Cmd押しっぱなし → Cmd+ホイールでズーム */
             >;
         };
 
-        /* 左パッド操作中に有効になるレイヤー。キーは全て透過なので通常のタイピングに影響しない */
+        /* インデックス1は default-layer 機能(OS別/接続別のベースレイヤー)用に空けておく。
+           全キー透過なので、有効になってもレイヤー0がそのまま効く */
+        alt_base_layer {
+            display-name = "Alt Base";
+            bindings = <
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            &trans
+            >;
+        };
+        /* 左パッド操作中に有効になるレイヤー2。キーは全て透過なので通常のタイピングに影響しない */
         two_hand_layer {
             display-name = "2-Hand";
             bindings = <
@@ -204,7 +290,7 @@
             >;
         };
 
-        /* 左クリック保持中に有効。両手連携より優先されるので、ドラッグ中は
+        /* レイヤー3。左クリック保持中に有効。両手連携より優先されるので、ドラッグ中は
            どちらのパッドでも普通にカーソルが動く */
         drag_layer {
             display-name = "Drag";
