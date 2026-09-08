@@ -3,6 +3,18 @@ if SHIELD_CLICKBOARD_ERGOTRACK_LEFT || SHIELD_CLICKBOARD_ERGOTRACK_RIGHT
 config ZMK_KEYBOARD_NAME
     default "ergotrack"
 
+config USB_DEVICE_VID
+    default 0x355D
+
+config USB_DEVICE_PID
+    default 0x1028
+
+config USB_DEVICE_MANUFACTURER
+    default "Keeb-On!"
+
+config USB_DEVICE_PRODUCT
+    default "ClickBoard ErgoTrack"
+
 config ZMK_SPLIT
     default y
 
