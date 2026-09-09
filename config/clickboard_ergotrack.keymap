@@ -24,15 +24,17 @@
            (macOS。Windows/Linuxなら &kp LCTRL に変更) */
         dual_pad: dual_pad {
             compatible = "zmk,input-processor-dual-pad";
-            #input-processor-cells = <1>;
+            #input-processor-cells = <2>;
             scroll-start = <30>;
             zoom-start = <60>;
             scroll-divisor = <16>;
             zoom-divisor = <24>;
+            invert-scroll;
             invert-zoom;
-            /* macOS側でCtrlとCmdを入れ替えているので、Cmdを届けたい時に送るのは
-               LCTRL。物理のRC(2,0)(&kp LCTRL)がCmdとして効いているのと同じ理屈 */
-            bindings = <&kp LCTRL>;
+            /* 修飾キーは直接指定せず仮想キー位置(pos77)を叩く。こうするとレイヤーで
+               解決されるので、OS判定でレイヤーを切り替えれば修飾キーも一緒に変わるし、
+               Keeb-On! Studio から再ビルドなしで変更できる */
+            bindings = <&tp_to_pos 77>;
         };
 
         drag_lclk: drag_lclk {
@@ -128,7 +130,7 @@
             &kp F14        /* pos74 3本指スワイプ BTN_4 */
             &kp F15        /* pos75 3本指スワイプ BTN_5 */
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
-            &none          /* pos77 未使用(タッチ状態は dual_pad が直接見る) */
+            &kp LCTRL      /* pos77 ズーム中に保持する修飾キー。このMacはCtrl↔Cmd入れ替え設定なのでLCTRLがCmdとして届く。WindowsではそのままCtrl */
             &none          /* pos78 未使用(2本指トリガーの両手連携は廃止) */
             >;
         };

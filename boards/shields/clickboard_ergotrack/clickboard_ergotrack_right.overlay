@@ -70,7 +70,7 @@
             &zip_scroll_scaler 1 16
             &zip_dynamic_scroll_scaler
             &zip_dynamic_xy_scaler
-            &dual_pad 0
+            &dual_pad 0 0
         >;
         status = "okay";
 
@@ -102,7 +102,7 @@
             &zip_scroll_scaler 1 16
             &zip_dynamic_scroll_scaler
             &zip_dynamic_xy_scaler
-            &dual_pad 1
+            &dual_pad 1 0
         >;
         status = "okay"; 
 
