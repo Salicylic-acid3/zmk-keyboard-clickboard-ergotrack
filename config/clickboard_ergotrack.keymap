@@ -29,7 +29,10 @@
             zoom-start = <60>;
             scroll-divisor = <16>;
             zoom-divisor = <24>;
-            bindings = <&kp LGUI>;
+            invert-zoom;
+            /* macOS側でCtrlとCmdを入れ替えているので、Cmdを届けたい時に送るのは
+               LCTRL。物理のRC(2,0)(&kp LCTRL)がCmdとして効いているのと同じ理屈 */
+            bindings = <&kp LCTRL>;
         };
 
         drag_lclk: drag_lclk {
