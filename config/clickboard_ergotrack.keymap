@@ -20,6 +20,18 @@
         /* 左クリックを押している間だけレイヤー3(ドラッグ)も有効にする。
            これでドラッグ中は両手連携モードが割り込まなくなり、反対側の
            パッドでもカーソルを動かせる = ドラッグの引き継ぎができる */
+        /* 左右各1本指を1つのジェスチャーとして扱う。ズーム中はCmdを保持する
+           (macOS。Windows/Linuxなら &kp LCTRL に変更) */
+        dual_pad: dual_pad {
+            compatible = "zmk,input-processor-dual-pad";
+            #input-processor-cells = <1>;
+            scroll-start = <30>;
+            zoom-start = <60>;
+            scroll-divisor = <16>;
+            zoom-divisor = <24>;
+            bindings = <&kp LGUI>;
+        };
+
         drag_lclk: drag_lclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -113,8 +125,8 @@
             &kp F14        /* pos74 3本指スワイプ BTN_4 */
             &kp F15        /* pos75 3本指スワイプ BTN_5 */
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
-            &none          /* pos77 左パッド1本指。手のひらや親指で誤爆するので未使用のまま */
-            &mo 2          /* pos78 左パッド2本指 = 両手連携レイヤー(右パッドがスクロールになる) */
+            &none          /* pos77 未使用(タッチ状態は dual_pad が直接見る) */
+            &none          /* pos78 未使用(2本指トリガーの両手連携は廃止) */
             >;
         };
 
