@@ -76,6 +76,50 @@
         };
     };
 
+    /* --- OS別のトラックパッド設定（2組目） ---
+       レイヤー1(Alt Base)が有効なときだけ通す組。OS検出→デフォルトレイヤー切替
+       (Connectionタブで設定)でレイヤー1に切り替わるので、実質「もう一方のOS用」
+       として使える。ナチュラルスクロールの向きが代表的な用途。
+
+       なぜ RIP の active-layers ではなくリスナーのレイヤー別サブノードなのか:
+       ZMK ではデフォルトレイヤー(=0)が常に有効なため、active-layers で
+       「レイヤー0のときだけ」を表現できない。1組目が両方のOSで効いてしまい、
+       レイヤー1では二重に掛かる。リスナー側の layers は「そのレイヤーが有効な
+       ときにこのチェーンを使う」なので、その問題が起きない。
+
+       processor-label は既定で7文字までなので、conf で
+       CONFIG_ZMK_RUNTIME_INPUT_PROCESSOR_NAME_MAX_LEN=16 に広げてある。
+       1組目の名前は変えていない — 名前は保存済み設定のキーなので、
+       変えると実機に入っている調整値が行方不明になる。 */
+
+    mouse_rip_alt: mouse_rip_alt {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "mouse (alt)";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_X>;
+        y-codes = <INPUT_REL_Y>;
+        scale-multiplier = <1>;
+        scale-divisor = <1>;
+        rotation-degrees = <0>;
+        track-remainders;
+        #input-processor-cells = <0>;
+    };
+
+    scroll_rip_alt: scroll_rip_alt {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "scroll (alt)";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_HWHEEL>;
+        y-codes = <INPUT_REL_WHEEL>;
+        scale-multiplier = <1>;
+        /* 1組目と同じく等倍から。ホイールは zip_scroll_scaler 1 16 で
+           既に合わせてあるので、モジュール既定の 1/60 は使わない。 */
+        scale-divisor = <1>;
+        rotation-degrees = <0>;
+        track-remainders;
+        #input-processor-cells = <0>;
+    };
+
     pointing_device_split_listener: pointing_device_split_listener {
         compatible = "zmk,input-listener";
         device = <&pointing_device_split>;
@@ -108,6 +152,28 @@
                 &scroll_runtime_input_processor
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
+            >;
+        };
+
+        /* レイヤー1(Alt Base)= もう一方のOS。drag_mode より後に書いてあるので、
+           ドラッグ中は drag_mode が優先され、1組目の設定が使われる。
+           レイヤーの一致は OR なので「ドラッグ かつ Alt Base」は表現できない。
+           ドラッグ中に効くのはカーソル速度だけで、OSで変えたいスクロール方向は
+           関係しないため、そのままにしてある。 */
+        alt_os_mode {
+            layers = <1>;
+            input-processors = <
+                &trackpad_gestures
+                &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_xy_transform INPUT_TRANSFORM_X_INVERT
+                &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
+                &zip_scroll_scaler 1 16
+                &mouse_rip_alt
+                &scroll_rip_alt
+                &zip_dynamic_scroll_scaler
+                &zip_dynamic_xy_scaler
+                &dual_pad 0 0
             >;
         };
     };
@@ -144,6 +210,28 @@
                 &scroll_runtime_input_processor
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
+            >;
+        };
+
+        /* レイヤー1(Alt Base)= もう一方のOS。drag_mode より後に書いてあるので、
+           ドラッグ中は drag_mode が優先され、1組目の設定が使われる。
+           レイヤーの一致は OR なので「ドラッグ かつ Alt Base」は表現できない。
+           ドラッグ中に効くのはカーソル速度だけで、OSで変えたいスクロール方向は
+           関係しないため、そのままにしてある。 */
+        alt_os_mode {
+            layers = <1>;
+            input-processors = <
+                &trackpad_gestures
+                &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_xy_transform INPUT_TRANSFORM_Y_INVERT
+                &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
+                &zip_scroll_transform INPUT_TRANSFORM_Y_INVERT
+                &zip_scroll_scaler 1 16
+                &mouse_rip_alt
+                &scroll_rip_alt
+                &zip_dynamic_scroll_scaler
+                &zip_dynamic_xy_scaler
+                &dual_pad 1 0
             >;
         };
     };
