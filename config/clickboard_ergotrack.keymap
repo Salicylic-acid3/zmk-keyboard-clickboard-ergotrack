@@ -28,6 +28,73 @@
                      , <&macro_pause_for_release>
                      , <&macro_release &mkp LCLK &mo 2>;
         };
+
+        /* --- タップ/ホールドの判定時間プリセット ---
+           押している時間がここで指定した ms を超えたら「ホールド」、
+           それより短ければ「タップ」と判定される。
+           数値ちがいのインスタンスを並べて定義しておくと、Keeb-On! Studio の
+           キー割り当て候補にそのまま並び、キーごとに好みの速さを選べる。
+           値そのものはコンパイル時固定だが、ファームウェアはタグを打てば
+           GitHub Releases から配布されるので、合わなければ数値を変えて再配布する。
+
+           flavor は ZMK 標準に合わせてある:
+             mod-tap 系   = hold-preferred (ZMK の &mt と同じ)
+             layer-tap 系 = tap-preferred  (ZMK の &lt と同じ)
+           なので mt_mid / lt_mid は標準の &mt / &lt と完全に同じ挙動になる。 */
+
+        mt_fast: mod_tap_fast {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <150>;
+            bindings = <&kp>, <&kp>;
+            display-name = "Mod-Tap 150ms";
+        };
+
+        mt_mid: mod_tap_mid {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&kp>, <&kp>;
+            display-name = "Mod-Tap 200ms";
+        };
+
+        mt_slow: mod_tap_slow {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <280>;
+            bindings = <&kp>, <&kp>;
+            display-name = "Mod-Tap 280ms";
+        };
+
+        lt_fast: layer_tap_fast {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <150>;
+            bindings = <&mo>, <&kp>;
+            display-name = "Layer-Tap 150ms";
+        };
+
+        lt_mid: layer_tap_mid {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&mo>, <&kp>;
+            display-name = "Layer-Tap 200ms";
+        };
+
+        lt_slow: layer_tap_slow {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <280>;
+            bindings = <&mo>, <&kp>;
+            display-name = "Layer-Tap 280ms";
+        };
     };
 
     keymap {
