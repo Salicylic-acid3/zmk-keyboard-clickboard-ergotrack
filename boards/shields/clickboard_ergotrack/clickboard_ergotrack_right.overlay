@@ -147,17 +147,17 @@
        このノードが無いとアプリ側は「モジュール無し」と判断して何も描かない。
 
        座標系はキーの物理レイアウト(clickboard_ergotrack-layouts.dtsi)と同じ。
-       100 = 1u。キーは x 0..1925 / y 0..800 の範囲にあるので、パッドはその
-       下(y=820)に、左右それぞれの主要キー列の中央へ置いてある。
-       実機の見た目と合わなければこの4つの数値だけ動かせばよい。 */
+       100 = 1u。上下の drag_lclk(幅268・y 25..125 と y 375..475)に挟まれた
+       空きにぴったり収まるよう、268 x 250 を y=125 から置いてある。
+       x は左が 650、右が 1010 で、どちらも drag_lclk と同じ列。 */
 
     touchpad_left: touchpad_left {
         compatible = "cormoran,physical-layout-touch-pad";
         display-name = "Touch Pad (Left)";
-        width = <240>;
-        height = <180>;
-        x = <205>;
-        y = <820>;
+        width = <268>;
+        height = <250>;
+        x = <650>;
+        y = <125>;
         linked-device-identifiers = "trackpad_left";
         linked-subsystems = "zmk__touch_pad";
     };
@@ -165,10 +165,10 @@
     touchpad_right: touchpad_right {
         compatible = "cormoran,physical-layout-touch-pad";
         display-name = "Touch Pad (Right)";
-        width = <240>;
-        height = <180>;
-        x = <1480>;
-        y = <820>;
+        width = <268>;
+        height = <250>;
+        x = <1010>;
+        y = <125>;
         linked-device-identifiers = "trackpad_right";
         linked-subsystems = "zmk__touch_pad";
     };
