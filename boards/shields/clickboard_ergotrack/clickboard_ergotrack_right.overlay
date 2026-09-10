@@ -14,6 +14,23 @@
         };
     };
 
+    /* 左右各1本指を1つのジェスチャーとして扱う。ズーム中はCmdを保持する
+       (macOS。Windows/Linuxなら &kp LCTRL に変更) */
+    dual_pad: dual_pad {
+        compatible = "zmk,input-processor-dual-pad";
+        #input-processor-cells = <2>;
+        scroll-start = <30>;
+        zoom-start = <60>;
+        scroll-divisor = <16>;
+        zoom-divisor = <24>;
+        invert-scroll;
+        invert-zoom;
+        /* 修飾キーは直接指定せず仮想キー位置(pos77)を叩く。こうするとレイヤーで
+           解決されるので、OS判定でレイヤーを切り替えれば修飾キーも一緒に変わるし、
+           Keeb-On! Studio から再ビルドなしで変更できる */
+        bindings = <&tp_to_pos 77>;
+    };
+
     /* ジェスチャーのBTNイベントを仮想キー位置へ流し直す(元のマウスボタン出力は中和) */
     trackpad_gestures: trackpad_gestures {
         compatible = "zmk,input-processor-behaviors-consume";
@@ -76,7 +93,7 @@
 
         /* レイヤー3(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
         drag_mode {
-            layers = <3>;
+            layers = <2>;
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
@@ -108,7 +125,7 @@
 
         /* レイヤー3(=左クリック保持中)は通常動作。両手連携より先に書くことで優先される */
         drag_mode {
-            layers = <3>;
+            layers = <2>;
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP

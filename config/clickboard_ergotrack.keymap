@@ -17,32 +17,16 @@
             #binding-cells = <2>;
         };
 
-        /* 左クリックを押している間だけレイヤー3(ドラッグ)も有効にする。
-           これでドラッグ中は両手連携モードが割り込まなくなり、反対側の
-           パッドでもカーソルを動かせる = ドラッグの引き継ぎができる */
-        /* 左右各1本指を1つのジェスチャーとして扱う。ズーム中はCmdを保持する
-           (macOS。Windows/Linuxなら &kp LCTRL に変更) */
-        dual_pad: dual_pad {
-            compatible = "zmk,input-processor-dual-pad";
-            #input-processor-cells = <2>;
-            scroll-start = <30>;
-            zoom-start = <60>;
-            scroll-divisor = <16>;
-            zoom-divisor = <24>;
-            invert-scroll;
-            invert-zoom;
-            /* 修飾キーは直接指定せず仮想キー位置(pos77)を叩く。こうするとレイヤーで
-               解決されるので、OS判定でレイヤーを切り替えれば修飾キーも一緒に変わるし、
-               Keeb-On! Studio から再ビルドなしで変更できる */
-            bindings = <&tp_to_pos 77>;
-        };
-
+        /* 左クリックを押している間だけレイヤー2(Drag)も有効にする。
+           Dragレイヤーでは dual_pad を通さない処理チェーンに切り替わるので、
+           ドラッグ中に反対側のパッドへ指を置いてもジェスチャー融合が始まらず、
+           そのままカーソルを動かせる = ドラッグの引き継ぎができる */
         drag_lclk: drag_lclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_press &mkp LCLK &mo 3>
+            bindings = <&macro_press &mkp LCLK &mo 2>
                      , <&macro_pause_for_release>
-                     , <&macro_release &mkp LCLK &mo 3>;
+                     , <&macro_release &mkp LCLK &mo 2>;
         };
     };
 
@@ -221,93 +205,7 @@
             &trans
             >;
         };
-        /* 左パッド操作中に有効になるレイヤー2。キーは全て透過なので通常のタイピングに影響しない */
-        two_hand_layer {
-            display-name = "2-Hand";
-            bindings = <
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            &trans
-            >;
-        };
-
-        /* レイヤー3。左クリック保持中に有効。両手連携より優先されるので、ドラッグ中は
+        /* レイヤー2。左クリック保持中に有効。ドラッグ中は
            どちらのパッドでも普通にカーソルが動く */
         drag_layer {
             display-name = "Drag";
@@ -400,5 +298,8 @@
         extra3 { status = "reserved"; };
         extra4 { status = "reserved"; };
         extra5 { status = "reserved"; };
+        extra6 { status = "reserved"; };
+        extra7 { status = "reserved"; };
+        extra8 { status = "reserved"; };
     };
 };
