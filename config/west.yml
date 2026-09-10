@@ -71,5 +71,9 @@ manifest:
     # キー以外の部品(トラックパッド)の位置をアプリへ伝えるための
     # カスタム Studio RPC。これが無いとキーマップ画面にパッドが描かれない。
     - name: zmk-feature-module-physical-layout
+    # --- Custom Studio Protocol: トラックパッドのランタイム調整 ---
+    # 感度・軸反転・カーソル⇔スクロール・回転・レイヤー別有効化をアプリから変える。
+    # 名前が zmk-feature- ではなく zmk-module- なので注意。
+    - name: zmk-module-runtime-input-processor
   self:
     path: config
