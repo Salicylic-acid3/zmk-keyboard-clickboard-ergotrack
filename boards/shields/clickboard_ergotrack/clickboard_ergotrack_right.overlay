@@ -138,6 +138,41 @@
             >;
         };
     };
+
+    /* --- Keeb-On! Studio にトラックパッドの位置を伝える ---
+       キーの物理レイアウトは ZMK 公式のプロトコルで送られるが、キー以外の
+       部品(トラックパッド/トラックボール/エンコーダー)は公式プロトコルに
+       口が無い。zmk-feature-module-physical-layout がその口を足していて、
+       アプリはこれを読んでキーマップ画面にパッドを描く。
+       このノードが無いとアプリ側は「モジュール無し」と判断して何も描かない。
+
+       座標系はキーの物理レイアウト(clickboard_ergotrack-layouts.dtsi)と同じ。
+       100 = 1u。キーは x 0..1925 / y 0..800 の範囲にあるので、パッドはその
+       下(y=820)に、左右それぞれの主要キー列の中央へ置いてある。
+       実機の見た目と合わなければこの4つの数値だけ動かせばよい。 */
+
+    touchpad_left: touchpad_left {
+        compatible = "cormoran,physical-layout-touch-pad";
+        display-name = "Touch Pad (Left)";
+        width = <240>;
+        height = <180>;
+        x = <205>;
+        y = <820>;
+        linked-device-identifiers = "trackpad_left";
+        linked-subsystems = "zmk__touch_pad";
+    };
+
+    touchpad_right: touchpad_right {
+        compatible = "cormoran,physical-layout-touch-pad";
+        display-name = "Touch Pad (Right)";
+        width = <240>;
+        height = <180>;
+        x = <1480>;
+        y = <820>;
+        linked-device-identifiers = "trackpad_right";
+        linked-subsystems = "zmk__touch_pad";
+    };
+
 };
 
 &default_transform {
@@ -177,40 +212,6 @@
             bias-pull-up;
             low-power-enable;
         };
-    };
-
-    /* --- Keeb-On! Studio にトラックパッドの位置を伝える ---
-       キーの物理レイアウトは ZMK 公式のプロトコルで送られるが、キー以外の
-       部品(トラックパッド/トラックボール/エンコーダー)は公式プロトコルに
-       口が無い。zmk-feature-module-physical-layout がその口を足していて、
-       アプリはこれを読んでキーマップ画面にパッドを描く。
-       このノードが無いとアプリ側は「モジュール無し」と判断して何も描かない。
-
-       座標系はキーの物理レイアウト(clickboard_ergotrack-layouts.dtsi)と同じ。
-       100 = 1u。キーは x 0..1925 / y 0..800 の範囲にあるので、パッドはその
-       下(y=820)に、左右それぞれの主要キー列の中央へ置いてある。
-       実機の見た目と合わなければこの4つの数値だけ動かせばよい。 */
-
-    touchpad_left: touchpad_left {
-        compatible = "cormoran,physical-layout-touch-pad";
-        display-name = "Touch Pad (Left)";
-        width = <240>;
-        height = <180>;
-        x = <205>;
-        y = <820>;
-        linked-device-identifiers = "trackpad_left";
-        linked-subsystems = "zmk__touch_pad";
-    };
-
-    touchpad_right: touchpad_right {
-        compatible = "cormoran,physical-layout-touch-pad";
-        display-name = "Touch Pad (Right)";
-        width = <240>;
-        height = <180>;
-        x = <1480>;
-        y = <820>;
-        linked-device-identifiers = "trackpad_right";
-        linked-subsystems = "zmk__touch_pad";
     };
 };
 
