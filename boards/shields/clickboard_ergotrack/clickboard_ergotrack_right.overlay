@@ -37,13 +37,19 @@
         compatible = "zmk,input-processor-behaviors-consume";
         #input-processor-cells = <0>;
         type = <INPUT_EV_KEY>;
-        codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6>;
+        codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6
+                 INPUT_BTN_SIDE INPUT_BTN_EXTRA>;
         bindings = <
             &tp_to_pos 72
             &tp_to_pos 73
             &tp_to_pos 74
             &tp_to_pos 75
             &tp_to_pos 76
+            /* 2本指横スワイプ。BTN_SIDE/BTN_EXTRA という名前に意味は無く、
+               他のジェスチャーと衝突しない2つというだけ。どちらが画面の
+               どちら向きかはパッドの載せ方で決まる */
+            &tp_to_pos 79
+            &tp_to_pos 80
         >;
     };
 

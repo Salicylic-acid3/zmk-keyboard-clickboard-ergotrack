@@ -86,6 +86,10 @@
             , <&key_physical_attrs 100 100 1050 700 0 0 0>
             , <&key_physical_attrs 100 100 1150 700 0 0 0>
             , <&key_physical_attrs 100 100 1250 700 0 0 0>
+            /* pos79/pos80: 2本指横スワイプ。上の7個と同じ「スイッチの無い行」で、
+               アプリの盤面では他の仮想キーと一緒に非表示になる */
+            , <&key_physical_attrs 100 100 1350 700 0 0 0>
+            , <&key_physical_attrs 100 100 1450 700 0 0 0>
             ;
     };
 };

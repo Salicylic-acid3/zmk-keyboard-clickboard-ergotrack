@@ -96,6 +96,36 @@
             bindings = <&mo>, <&kp>;
             display-name = "Layer-Tap 280ms";
         };
+
+        /* --- QMK の PERMISSIVE_HOLD 相当 ---
+           QMK の PERMISSIVE_HOLD は「押している間に別のキーが押されて
+           *離された* なら、TAPPING_TERM を待たずにホールドと決める」。
+           ZMK ではこれが flavor = "balanced"。上の hold-preferred は
+           QMK でいう HOLD_ON_OTHER_KEY_PRESS(別キーが押された時点で
+           ホールド確定)で、もっと強い。tap-preferred はその逆側。
+
+           時間は QMK 側で使っていた TAPPING_TERM 180 に合わせてある。
+
+           QUICK_TAP_TERM 0 に相当する設定は書いていない。ZMK の
+           quick-tap-ms は既定が -1 = 無効で、これが QMK の 0 と同じ意味。
+           値を書くとむしろ有効になってしまう。 */
+        mt_perm: mod_tap_perm {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <180>;
+            bindings = <&kp>, <&kp>;
+            display-name = "Mod-Tap 180ms (Permissive)";
+        };
+
+        lt_perm: layer_tap_perm {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <180>;
+            bindings = <&mo>, <&kp>;
+            display-name = "Layer-Tap 180ms (Permissive)";
+        };
     };
 
     keymap {
@@ -184,6 +214,12 @@
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
             &kp LCTRL      /* pos77 ズーム中に保持する修飾キー。このMacはCtrl↔Cmd入れ替え設定なのでLCTRLがCmdとして届く。WindowsではそのままCtrl */
             &none          /* pos78 未使用(2本指トリガーの両手連携は廃止) */
+            /* pos79/pos80: 2本指横スワイプ。どちらが左でどちらが右かはパッドの
+               載せ方で決まるので、実機で確かめて必要なら入れ替えること。
+               ここでは macOS のブラウザの「戻る/進む」を入れてある。
+               マウスの戻る/進むボタンそのものを送りたいなら &mkp MB4 / &mkp MB5 */
+            &kp LG(LBKT)   /* pos79 2本指横スワイプ A = Cmd+[ (戻る) */
+            &kp LG(RBKT)   /* pos80 2本指横スワイプ B = Cmd+] (進む) */
             >;
         };
 
@@ -192,6 +228,8 @@
         alt_base_layer {
             display-name = "Alt Base";
             bindings = <
+            &trans
+            &trans
             &trans
             &trans
             &trans
@@ -282,6 +320,8 @@
         drag_layer {
             display-name = "Drag";
             bindings = <
+            &trans
+            &trans
             &trans
             &trans
             &trans
