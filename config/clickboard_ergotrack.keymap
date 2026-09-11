@@ -98,6 +98,36 @@
         };
     };
 
+    /* Studio のアンロックをコンボにも用意してある。
+
+       レイヤー2の Del にも &studio_unlock は置いてあるが、あれはキーマップの
+       一部なので、Studio で一度でも保存したキーマップが flash に残っていると
+       そちらが読み込まれて、新しいファームウェアの割り当てが表に出てこない。
+       解除できないと直しに行くこともできない、という詰み方をする。
+
+       コンボはキーマップではなく devicetree のこのノードから来るので、
+       保存済みキーマップの影響を受けない。設定を消しても残る。
+
+       操作は「右手側の一番右上の2つ、0 と Del を同時押し」。
+       50ms 以内に両方、かつ直前 250ms の間に他のキーを打っていないこと。
+       誤って発動しても Studio のロックが外れるだけで実害は無いので、
+       押しやすさを優先してある。
+
+       slot は 7 (既定の最大 8 スロットの最後)。アプリでコンボを作ったときに
+       使われるのは若い番号からなので、一番ぶつかりにくい。 */
+    runtime_combo_defaults {
+        compatible = "cormoran,runtime-combo-defaults";
+
+        combo_studio_unlock {
+            slot = <7>;
+            key-positions = <12 13>;   /* RC(6,4) 0 と RC(6,5) Del */
+            bindings = <&studio_unlock>;
+            display-name = "Studio Unlock";
+            timeout-ms = <50>;
+            require-prior-idle-ms = <250>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
         default_layer {
