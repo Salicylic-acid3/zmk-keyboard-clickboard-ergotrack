@@ -34,6 +34,23 @@ include:
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y
 
+  # 1b) devtool + **ウォッチドッグ無し**（セントラル）。
+  #     落ちるときファームは ERR も WRN も一行も残していない。ただし
+  #     Zephyr の致命的エラー(MPUによるスタック保護を含む)は
+  #     "***** MPU FAULT *****" を出してからリセットするので、本当に何も
+  #     出ていないなら**フォールトではない**可能性がある。
+  #     一方**ウォッチドッグのリセットは何も残さない** — CPUが黙って再起動する。
+  #     だからこれを切って挙動が変わるかを見る:
+  #       - 落ちなくなる/固まるだけになる → **ハングだった**。犯人は「どこかで
+  #         詰まって餌やりが止まったスレッド」で、スタックの話ではない
+  #       - 変わらず消える → ウォッチドッグではない。フォールトかUSB側
+  #     どちらに転んでも探す場所が半分になる。
+  - board: acdb
+    shield: clickboard_ergotrack_right
+    artifact-name: clickboard_ergotrack_right_devtool_nowdt
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_ZMK_WATCHDOG=n -DCONFIG_ZMK_WATCHDOG_STUDIO_RPC=n
+
   # 2) リレー無し。左右それぞれが自分の設定だけを持ち、セントラルは
   #    ペリフェラルへ設定RPCを転送しない。
   #    落ちるのがリレーの往復だという読みが当たっていれば、**これで繋がる**。
