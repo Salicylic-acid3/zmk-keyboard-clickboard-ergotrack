@@ -1,3 +1,23 @@
+# --- 自分たちで書き換えるモジュールは、ブランチではなくコミットで固定する ---
+#
+# このリポジトリのCIは **このリポジトリへの push でしか走らない**。west.yml が
+# `revision: <ブランチ名>` でモジュールを指していると、そのモジュールを直して
+# push しても**ファームは一度もビルドされない**。緑のCIと最新のドライバが
+# 別々に存在していて、焼いているのは古いほう、という状態になる。
+# 実際に一晩これで溶かした: ドライバの修正を追いかけていたつもりで、
+# ずっと修正前のファームを焼いていた。
+#
+# なので **Salicylic-acid3 の3つ(＝自分たちが書き換えるもの)はSHAで固定する。**
+# こうするとドライバを直すたびにここも1行変える必要が生まれ、
+# その1行が ErgoTrack へのコミットになり、CIが回る。**忘れようがなくなる。**
+# ついでにビルドが再現可能になる(同じタグからいつでも同じ物が出る)。
+#
+# 更新のしかた:
+#   git ls-remote --heads https://github.com/Salicylic-acid3/<repo>.git <branch>
+# で出たSHAを下の revision に貼る。ブランチ名は隣のコメントに残してある。
+#
+# cormoran / sekigon-gonnoc 側をブランチ追従のままにしてあるのは、あちらは
+# 自分たちが push する対象ではなく、追従をやめると上流の修正が届かなくなるため。
 manifest:
   version: 1.2
   defaults:
@@ -41,7 +61,8 @@ manifest:
           - trusted-firmware-m
     - name: zmk-driver-iqs9151
       remote: salicylic-acid3
-      revision: ergotrack
+      # branch: ergotrack
+      revision: 952e326d288bc1d339221f6282e5bdea50f7d24d
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
       revision: main
@@ -62,12 +83,14 @@ manifest:
     # settings に置いてあるので、アプリから再ビルドなしで変えられる。
     - name: zmk-feature-runtime-tap-dance
       remote: salicylic-acid3
-      revision: master
+      # branch: master
+      revision: df05361247f4d8582245f94b3389ad81fd7ad3ad
     # 左右それぞれの電池残量をアプリへ。ZMK本体はBLEのBattery Service経由でしか
     # 出さないので、USB接続だと見えない。不調を追っているときはUSBに繋いでいる。
     - name: zmk-feature-battery-report
       remote: salicylic-acid3
-      revision: master
+      # branch: master
+      revision: c053460040e220323795a844bb6e23e55d850291
     # --- Custom Studio Protocol: diagnostics & device settings ---
     # (Keeb-On! Studio's Troubleshooting and Settings tabs.)
     - name: zmk-feature-device-info
