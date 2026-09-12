@@ -25,6 +25,9 @@
         drag_lclk: drag_lclk {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
+            /* アプリのキー割り当て一覧に出る名前。これが無いと内部名の
+               "drag_lclk" がそのまま並び、押すと何が起きるか分からない。 */
+            display-name = "Left Click (Drag)";
             bindings = <&macro_press &mkp LCLK &mo 2>
                      , <&macro_pause_for_release>
                      , <&macro_release &mkp LCLK &mo 2>;
