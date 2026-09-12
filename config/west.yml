@@ -86,5 +86,14 @@ manifest:
     # 感度・軸反転・カーソル⇔スクロール・回転・レイヤー別有効化をアプリから変える。
     # 名前が zmk-feature- ではなく zmk-module- なので注意。
     - name: zmk-module-runtime-input-processor
+    # --- 調査用: キーボード自身のログとスタック使用量をアプリへ ---
+    # Kconfig は既定で全部オフなので、ここに置いてあっても通常ビルドには
+    # 何も入らない。build.yaml の *_devtool ビルドだけが有効にする。
+    # Devtoolウィンドウで見えるようになるもの:
+    #   - Zephyr のログ(LOG_WRN / LOG_ERR)がそのまま流れてくる。
+    #     デバッグプローブ無しでファームの声を聞ける唯一の手段。
+    #   - スレッドごとのスタックサイズと**高水位**。
+    #     スタック不足を当てずっぽうで追う必要がなくなる。
+    - name: zmk-module-devtool
   self:
     path: config

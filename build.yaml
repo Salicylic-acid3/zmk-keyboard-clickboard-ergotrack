@@ -9,3 +9,43 @@ include:
   - board: acdb
     shield: settings_reset
     artifact-name: settings_reset
+
+  # --- 調査用ビルド（常用しないこと） ---
+  #
+  # 「アプリに接続すると落ちる」を推測で追うのをやめるための2組。
+  # どちらも普段使いのファームとは別物として出てくるので、間違えて焼いても
+  # 上の3つを焼き直せば戻れる。
+
+  # 1) devtool 入り。**キーボード自身のログとスレッドごとのスタック使用量**を
+  #    アプリのDevtoolウィンドウへ流す。
+  #    - LOG_CAPTURE は Zephyr のログをRAMのリングに溜めてRPCで返す。
+  #      STREAMING が既定でオンなので、落ちる直前までの行は届く。
+  #    - STACK_USAGE は INIT_STACKS でスタックを塗ってから高水位を測るので、
+  #      「どのスレッドがあと何バイトだったか」が数字で出る。もうスタックを
+  #      当てにいく必要がなくなる。
+  #    STACK_USAGE / LOG_CAPTURE は ZMK_DEVTOOL_STUDIO_RPC の下にあり、それは
+  #    ZMK_STUDIO を要求する。**つまりセントラル(右)でしか動かない。**
+  #    左が落ちているなら、右のログに「ペリフェラルが切れた」として現れる。
+  #    右が落ちているなら、ログはそこで途切れてUSBごと消える。
+  #    この2つを見分けるのが第一の目的。
+  - board: acdb
+    shield: clickboard_ergotrack_right
+    artifact-name: clickboard_ergotrack_right_devtool
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y
+
+  # 2) リレー無し。左右それぞれが自分の設定だけを持ち、セントラルは
+  #    ペリフェラルへ設定RPCを転送しない。
+  #    落ちるのがリレーの往復だという読みが当たっていれば、**これで繋がる**。
+  #    繋がれば原因の場所が確定するうえ、原因を追っている間も
+  #    キーボードが普通に使える(失うのは「両半身へ一度に書く」だけ)。
+  #    左右そろえて焼くこと。片方だけだと、片方が転送しもう片方が受けない。
+  - board: acdb
+    shield: clickboard_ergotrack_left
+    artifact-name: clickboard_ergotrack_left_norelay
+    cmake-args: -DCONFIG_ZMK_CUSTOM_SETTINGS_SPLIT_RPC_RELAY=n
+  - board: acdb
+    shield: clickboard_ergotrack_right
+    artifact-name: clickboard_ergotrack_right_norelay
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_CUSTOM_SETTINGS_SPLIT_RPC_RELAY=n
