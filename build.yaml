@@ -32,7 +32,15 @@ include:
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right_devtool
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y
+    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_INPUT_IQS9151_MOTION_TRACE=y
+
+  # 1a) 上と同じ + **トラックパッドの動きの生ログ**(MOTION_TRACE)。
+  #     「一定速度で動かしているのに周期的に減速する」を、ICが位置を握って
+  #     まとめて放しているのか、ドライバがフレームを取りこぼしているのかで
+  #     見分けるための行。動いたフレーム1つにつき WRN 1行:
+  #       tp +<前回読みからのms> q<間に読んだ動きなしフレーム数> x<絶対X> y<絶対Y> r<生の相対X>,<生の相対Y> m<移動フラグ> i<infoフラグ>
+  #     +5 で q>0 が並ぶ → ICが止めてから跳んでいる(センサ側)
+  #     +30 前後で q=0 が並ぶ → フレームを読めていない(ドライバ/キュー側)
 
   # 1b) devtool + **ウォッチドッグ無し**（セントラル）。
   #     落ちるときファームは ERR も WRN も一行も残していない。ただし
