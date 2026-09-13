@@ -1,0 +1,71 @@
+From 027770d0350519079bb01ae30b29acbf2b4682a0 Mon Sep 17 00:00:00 2001
+From: Salicylic-acid3 <inaha17inya@gmail.com>
+Date: Sun, 13 Sep 2026 12:28:19 +0000
+Subject: [PATCH] Turn on the lag-free ripple correction on the long axis
+
+zmk-driver-iqs9151 ab1f6d0: the self-calibrating equaliser that divides
+the sensor's positional wave out of every report. Period 76 on X
+(1974 / 2 / 13 electrodes; measured 72-76), 0 on Y where no wave was
+measured. The distance window stays available but off; it is the
+fallback now.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_013UGDYopkpUXykYrqZp1prX
+---
+ .../clickboard_ergotrack/clickboard_ergotrack_left.conf    | 7 +++++++
+ .../clickboard_ergotrack/clickboard_ergotrack_right.conf   | 7 +++++++
+ config/west.yml                                            | 2 +-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/boards/shields/clickboard_ergotrack/clickboard_ergotrack_left.conf b/boards/shields/clickboard_ergotrack/clickboard_ergotrack_left.conf
+index d298035..bb514e3 100644
+--- a/boards/shields/clickboard_ergotrack/clickboard_ergotrack_left.conf
++++ b/boards/shields/clickboard_ergotrack/clickboard_ergotrack_left.conf
+@@ -99,6 +99,13 @@ CONFIG_INPUT_IQS9151_CURSOR_GAIN_Y_X10=10
+ # 粗ければ 3、遅れを感じたら 1(=無効)。アプリからも変えられる。
+ CONFIG_INPUT_IQS9151_CURSOR_SMOOTHING=2
+ 
++# 縦(センサX)の位置リップルを本体が自己学習して打ち消す。周期 = X解像度 / (2 x 電極13本) = 1974/26 = 76。
++# 実測(波形ツール、ゲインを変えても速度を変えても不変)は 72〜76。数%ずれると効きが半減するので
++# アプリ「リップル補正 縦」で 74〜78 を1刻みで追い込む。横(Y)には波が出なかったので 0。
++# 以前の「リップル除去(距離窓)」は同じ波を移動平均で消す方式で、半周期ぶんの遅延が出る。こちらは遅延ゼロ。
++CONFIG_INPUT_IQS9151_RIPPLE_PERIOD_X=76
++CONFIG_INPUT_IQS9151_RIPPLE_PERIOD_Y=0
++
+ # --- スタック: リレーイベント肥大化への対応 ---
+ # CONFIG_ZMK_SPLIT_RELAY_EVENT_DATA_LEN=256 にしたことで
+ # struct zmk_split_transport_peripheral_event が約260バイトに膨らんでいる。
+diff --git a/boards/shields/clickboard_ergotrack/clickboard_ergotrack_right.conf b/boards/shields/clickboard_ergotrack/clickboard_ergotrack_right.conf
+index 6ad44fe..57cdf7e 100644
+--- a/boards/shields/clickboard_ergotrack/clickboard_ergotrack_right.conf
++++ b/boards/shields/clickboard_ergotrack/clickboard_ergotrack_right.conf
+@@ -161,6 +161,13 @@ CONFIG_INPUT_IQS9151_CURSOR_GAIN_Y_X10=10
+ # 粗ければ 3、遅れを感じたら 1(=無効)。アプリからも変えられる。
+ CONFIG_INPUT_IQS9151_CURSOR_SMOOTHING=2
+ 
++# 縦(センサX)の位置リップルを本体が自己学習して打ち消す。周期 = X解像度 / (2 x 電極13本) = 1974/26 = 76。
++# 実測(波形ツール、ゲインを変えても速度を変えても不変)は 72〜76。数%ずれると効きが半減するので
++# アプリ「リップル補正 縦」で 74〜78 を1刻みで追い込む。横(Y)には波が出なかったので 0。
++# 以前の「リップル除去(距離窓)」は同じ波を移動平均で消す方式で、半周期ぶんの遅延が出る。こちらは遅延ゼロ。
++CONFIG_INPUT_IQS9151_RIPPLE_PERIOD_X=76
++CONFIG_INPUT_IQS9151_RIPPLE_PERIOD_Y=0
++
+ # --- スタック: リレーイベント肥大化への対応 ---
+ # CONFIG_ZMK_SPLIT_RELAY_EVENT_DATA_LEN=256 にしたことで
+ # struct zmk_split_transport_peripheral_event が約260バイトに膨らんでいる。
+diff --git a/config/west.yml b/config/west.yml
+index a0713d3..a74434f 100644
+--- a/config/west.yml
++++ b/config/west.yml
+@@ -62,7 +62,7 @@ manifest:
+     - name: zmk-driver-iqs9151
+       remote: salicylic-acid3
+       # branch: ergotrack
+-      revision: 200a1309cc8c5af08f51a4a1790f223690345448
++      revision: ab1f6d04890d4099dedd07523fec61cb6f253844
+     - name: zmk-feature-non-lipo-battery-management
+       remote: sekigon-gonnoc
+       revision: main
+-- 
+2.43.0
+

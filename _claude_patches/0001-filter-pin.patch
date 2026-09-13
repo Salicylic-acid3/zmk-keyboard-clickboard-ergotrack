@@ -1,0 +1,32 @@
+From c2d5fee7fa7d1f9e478503238adbb5eb2db30437 Mon Sep 17 00:00:00 2001
+From: Salicylic-acid3 <inaha17inya@gmail.com>
+Date: Sat, 12 Sep 2026 17:34:33 +0000
+Subject: [PATCH] Pick up the driver's runtime filter settings
+
+zmk-driver-iqs9151 1c3a537: the sensor's stationary threshold, jitter
+delta and dynamic/static position filter become custom settings the app
+can change, so the vertical stepping can be chased without a flash per
+guess. Nothing in this repo changes but the pin.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_013UGDYopkpUXykYrqZp1prX
+---
+ config/west.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/west.yml b/config/west.yml
+index 2b2dcc6..9f42b2c 100644
+--- a/config/west.yml
++++ b/config/west.yml
+@@ -62,7 +62,7 @@ manifest:
+     - name: zmk-driver-iqs9151
+       remote: salicylic-acid3
+       # branch: ergotrack
+-      revision: 5880a9c5d85f11370d612bc941a04d69f961d336
++      revision: 1c3a537fbefcde76c94330ddddfac098c6d383d5
+     - name: zmk-feature-non-lipo-battery-management
+       remote: sekigon-gonnoc
+       revision: main
+-- 
+2.43.0
+

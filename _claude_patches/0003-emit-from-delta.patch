@@ -1,0 +1,32 @@
+From e5112712d27a9210301481f0fdb8b85f89c9fbc2 Mon Sep 17 00:00:00 2001
+From: Salicylic-acid3 <inaha17inya@gmail.com>
+Date: Sat, 12 Sep 2026 18:21:57 +0000
+Subject: [PATCH] Take the cursor-gating fix for the periodic deceleration
+
+zmk-driver-iqs9151 79c6154: emit the pointer from the reported delta
+rather than the IC's MOVEMENT_DETECTED bit, which the device toggles off
+on most frames of a slow drag and which was costing ~15 of every 16
+counts. Only the pin moves here.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_013UGDYopkpUXykYrqZp1prX
+---
+ config/west.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/west.yml b/config/west.yml
+index 642810d..977b629 100644
+--- a/config/west.yml
++++ b/config/west.yml
+@@ -62,7 +62,7 @@ manifest:
+     - name: zmk-driver-iqs9151
+       remote: salicylic-acid3
+       # branch: ergotrack
+-      revision: bf094bf9d3cd1f89487229811699359e86da78b0
++      revision: 79c6154ada2416f3e788c0bd823bda8b27244725
+     - name: zmk-feature-non-lipo-battery-management
+       remote: sekigon-gonnoc
+       revision: main
+-- 
+2.43.0
+

@@ -1,0 +1,32 @@
+From 51df3dce976c026d7875f6c8ada751612f9a66ea Mon Sep 17 00:00:00 2001
+From: Salicylic-acid3 <inaha17inya@gmail.com>
+Date: Sun, 13 Sep 2026 01:28:13 +0000
+Subject: [PATCH] Take the distance-window ripple smoothing
+
+zmk-driver-iqs9151 200a130: a pointer average over a window of finger
+travel, to flatten the ~2 mm positional ripple the 1.1 mm cover could
+not. Off by default; set cursor_distance_smoothing to ~45 from the app.
+Only the pin moves here.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_013UGDYopkpUXykYrqZp1prX
+---
+ config/west.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/west.yml b/config/west.yml
+index 977b629..a0713d3 100644
+--- a/config/west.yml
++++ b/config/west.yml
+@@ -62,7 +62,7 @@ manifest:
+     - name: zmk-driver-iqs9151
+       remote: salicylic-acid3
+       # branch: ergotrack
+-      revision: 79c6154ada2416f3e788c0bd823bda8b27244725
++      revision: 200a1309cc8c5af08f51a4a1790f223690345448
+     - name: zmk-feature-non-lipo-battery-management
+       remote: sekigon-gonnoc
+       revision: main
+-- 
+2.43.0
+
