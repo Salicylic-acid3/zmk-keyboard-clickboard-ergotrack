@@ -1,2 +1,5 @@
 # macOS
 .DS_Store
+
+# patches handed over from the Claude session, applied with git am
+_claude_patches/
