@@ -129,15 +129,20 @@
     pointing_device_split_listener: pointing_device_split_listener {
         compatible = "zmk,input-listener";
         device = <&pointing_device_split>;
+        /* 左パッド用のチェーン。X 反転(左は 180 度回して載っている)を回転処理
+           (mouse/scroll の runtime processor)の**後ろ**に置いてある。回転を
+           挟んで反転すると回転の向きが鏡になるので、アプリで入れた 1 つの角度が
+           右では +θ、左では −θ として効く = 手の開きに合わせて左右対称になる。
+           反転が回転の前だと左右同じ向きに回ってしまい、使い物にならなかった。 */
         input-processors = <
             &trackpad_gestures
             &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
-            &zip_xy_transform INPUT_TRANSFORM_X_INVERT
             &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
-            &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
             &zip_scroll_scaler 1 16
             &mouse_runtime_input_processor
             &scroll_runtime_input_processor
+            &zip_xy_transform INPUT_TRANSFORM_X_INVERT
+            &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
             &zip_dynamic_scroll_scaler
             &zip_dynamic_xy_scaler
             &dual_pad 0 0
@@ -150,12 +155,12 @@
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
-                &zip_xy_transform INPUT_TRANSFORM_X_INVERT
                 &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
-                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
                 &zip_scroll_scaler 1 16
                 &mouse_runtime_input_processor
                 &scroll_runtime_input_processor
+                &zip_xy_transform INPUT_TRANSFORM_X_INVERT
+                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
             >;
@@ -171,12 +176,12 @@
             input-processors = <
                 &trackpad_gestures
                 &zip_xy_transform INPUT_TRANSFORM_XY_SWAP
-                &zip_xy_transform INPUT_TRANSFORM_X_INVERT
                 &zip_scroll_transform INPUT_TRANSFORM_XY_SWAP
-                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
                 &zip_scroll_scaler 1 16
                 &mouse_rip_alt
                 &scroll_rip_alt
+                &zip_xy_transform INPUT_TRANSFORM_X_INVERT
+                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
                 &dual_pad 0 0
