@@ -6,6 +6,13 @@
 #include <dt-bindings/zmk/zip_dynamic_scale.h>
 
 / {
+    /* drag_lclk はボタンを入力イベントとして出す(&mkp と同じ作り)ので、
+       それを HID に流すリスナーが要る。ZMK が &mkp に付けているものと同じ。 */
+    drag_lclk_listener {
+        compatible = "zmk,input-listener";
+        device = <&drag_lclk>;
+    };
+
     behaviors {
         /* 実行中にポインタ/スクロール速度を変えるビヘイビア */
         zip_dyn_scale: zip_dyn_scale {
@@ -18,19 +25,28 @@
             #binding-cells = <2>;
         };
 
-        /* 左クリックを押している間だけレイヤー2(Drag)も有効にする。
+        /* トラックパッドの下のタクトスイッチ用の左クリック(ドライバの
+           zmk,behavior-drag-click)。押すと左ボタン + レイヤー2(Drag)。
+           離したとき、どちらかのパッドに指が乗っていればボタンとレイヤーを
+           離さず、指が全部離れた時点で離す = スイッチから指を離しても
+           パッドの指が乗っている限りドラッグが続く。指が乗っていなければ
+           普通のクリック。ドラッグ中にもう一度押せばスイッチが引き継ぐ。
            Dragレイヤーでは dual_pad を通さない処理チェーンに切り替わるので、
            ドラッグ中に反対側のパッドへ指を置いてもジェスチャー融合が始まらず、
-           そのままカーソルを動かせる = ドラッグの引き継ぎができる */
+           そのままカーソルを動かせる = ドラッグの引き継ぎができる。
+           親指などパッドに指を乗せたままシングルクリックしたいキーには
+           これではなく &mkp LCLK を当てる(指が乗っていると離れなくなる)。
+           指の有無は両半身の .conf の INPUT_IQS9151_TOUCH_STATE_ENABLE が
+           出す生のタッチ状態イベント。ノード名 drag_lclk は保存済みの
+           キーマップがこの名前で参照しているので変えない。 */
         drag_lclk: drag_lclk {
-            compatible = "zmk,behavior-macro";
+            compatible = "zmk,behavior-drag-click";
             #binding-cells = <0>;
             /* アプリのキー割り当て一覧に出る名前。これが無いと内部名の
                "drag_lclk" がそのまま並び、押すと何が起きるか分からない。 */
             display-name = "Left Click (Drag)";
-            bindings = <&macro_press &mkp LCLK &mo 2>
-                     , <&macro_pause_for_release>
-                     , <&macro_release &mkp LCLK &mo 2>;
+            button = <0>;
+            layer = <2>;
         };
 
         /* --- タップ/ホールドの判定時間プリセット ---
@@ -201,10 +217,10 @@
             &zip_dyn_scale ZDS_XY ZDS_INC   /* RC(10,4) カーソル速度 + */
             &zip_dyn_scale ZDS_ALL ZDS_RST  /* RC(10,5) 速度リセット */
             &kp DOWN       /* RC(5,1) Dows */
-            &drag_lclk     /* RC(5,3) Left Click */
+            &mkp LCLK      /* RC(5,3) Left Click */
             &mkp MCLK      /* RC(5,4) Middle Click */
             &mkp RCLK      /* RC(5,5) Right Click */
-            &drag_lclk     /* RC(11,0) Left Click */
+            &mkp LCLK      /* RC(11,0) Left Click */
             &mkp MCLK      /* RC(11,1) Middle Click */
             &mkp RCLK      /* RC(11,2) Right Click */
             &zip_dyn_scale ZDS_SC ZDS_INC   /* RC(11,4) スクロール速度 + */
