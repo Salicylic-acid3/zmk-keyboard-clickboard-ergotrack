@@ -32,11 +32,18 @@ include:
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right_devtool
     snippet: studio-rpc-usb-uart
-    #     **zmk 本体のログは WRN 以上に絞る**(-DCONFIG_ZMK_LOG_LEVEL_WRN=y)。DBG のままだと
-    #     1 フレームあたり十数行の apply_config/scale_val がログ捕捉リングを押し出し、
-    #     アプリが 125ms ごとに取りに来る直前の 2〜3 フレームしか tp 行が残らない
-    #     (round 7 の斜めストロークのログがそれ: 5ms 間隔の行が 2〜3 本、次は 123ms 後)。
-    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_INPUT_IQS9151_MOTION_TRACE=y -DCONFIG_ZMK_LOG_LEVEL_WRN=y
+    #     **ログは WRN 以上だけをコンパイルする**(-DCONFIG_LOG_MAX_LEVEL=2)。
+    #     -DCONFIG_ZMK_LOG_LEVEL_WRN=y だけでは効かなかった: zmk の DBG 行
+    #     (zmk_rpc_custom_subsystem_encode_response_payload など)が届き続け、
+    #     アプリが設定を読むたびにその応答のログが捕捉され、それを流す通知が
+    #     またログを生む(自己増殖)。Chrome が落ちるほど溜まったのはこれ。
+    #     さらに Zephyr のログ本体は自動起動のバックエンドを初期化のあとで
+    #     LOG_MAX_LEVEL で有効化し直すので、devtool 側の「既定は INF まで」も
+    #     上書きされる。LOG_MAX_LEVEL はマクロ段階の上限で、どのモジュールの
+    #     どの設定より強い。tp / m(地図) / eqs(探索) / SHOW_RESET / restored の
+    #     行はすべて WRN なので残る。
+    #     ログ 1 行は **47 文字**で切られる(devtool の LogRecord.message)。
+    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_INPUT_IQS9151_MOTION_TRACE=y -DCONFIG_LOG_MAX_LEVEL=2
 
   # 1a) 上と同じ + **トラックパッドの動きの生ログ**(MOTION_TRACE)。
   #     「一定速度で動かしているのに周期的に減速する」を、ICが位置を握って
