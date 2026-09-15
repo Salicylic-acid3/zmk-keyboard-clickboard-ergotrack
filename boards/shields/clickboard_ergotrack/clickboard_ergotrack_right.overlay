@@ -5,6 +5,7 @@
 #include <input/processors/runtime-input-processor.dtsi>
 #include <dt-bindings/zmk/input_transform.h>
 #include <dt-bindings/zmk/zip_dynamic_scale.h>
+#include <dt-bindings/zmk/dual_pad.h>
 
 / {
     behaviors {
@@ -26,6 +27,12 @@
         zoom-divisor = <24>;
         invert-scroll;
         invert-zoom;
+        /* 両手スクロールをアプリのスクロール反転・速さに従わせる。dual_pad は
+           チェーンの最後にいて、手前の scroll ランタイム処理(アプリの反転と速さ
+           はそこにある)を自分の出力が通らない。そこで、どのチェーンがどの
+           scroll 処理を使うかをここで列挙し、参照側の DUAL_PAD_SCROLL_PROC(n)
+           で選ぶ。0 = 1組目(メイン)、1 = 2組目(Alt Base、もう一方の OS)。 */
+        scroll-processors = <&scroll_runtime_input_processor &scroll_rip_alt>;
         /* 修飾キーは直接指定せず仮想キー位置(pos77)を叩く。こうするとレイヤーで
            解決されるので、OS判定でレイヤーを切り替えれば修飾キーも一緒に変わるし、
            Keeb-On! Studio から再ビルドなしで変更できる */
@@ -184,7 +191,7 @@
                 &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
-                &dual_pad 0 0
+                &dual_pad 0 DUAL_PAD_SCROLL_PROC(1)
             >;
         };
     };
@@ -242,7 +249,7 @@
                 &scroll_rip_alt
                 &zip_dynamic_scroll_scaler
                 &zip_dynamic_xy_scaler
-                &dual_pad 1 0
+                &dual_pad 1 DUAL_PAD_SCROLL_PROC(1)
             >;
         };
     };
