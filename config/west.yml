@@ -37,8 +37,18 @@ manifest:
       revision: main+dya
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
+    #
+    # 2026-09 からフォーク(SHA固定): cormoran の v4.1.0+zmk-fixes+nrf-half-duplex-uart
+    # に、上流 Zephyr の 93b951d6f "Bluetooth: Controller: Fix prepare pipeline
+    # overflow in observer role" を 1 コミットだけ載せたもの。resume イベントの
+    # 重複が prepare パイプラインに溜まり、BLE 使用中に lll_prepare_resolve() の
+    # アサートで落ちる(watchdog の「クラッシュ PC 0x56a5a」)のを直す。
+    # cormoran 側のブランチが進んだら、フォークのブランチをそこへ rebase して
+    # SHA を貼り直す。上流に取り込まれたら cormoran 追従に戻す。
+    #   フォークのブランチ: v4.1.0+zmk-fixes+nrf-half-duplex-uart+lll-pipeline-fix
     - name: zephyr
-      revision: v4.1.0+zmk-fixes+nrf-half-duplex-uart
+      remote: salicylic-acid3
+      revision: 20348ee2c572897ee750be2e25dfe469c602052e
       clone-depth: 1
       import:
         name-blocklist:
