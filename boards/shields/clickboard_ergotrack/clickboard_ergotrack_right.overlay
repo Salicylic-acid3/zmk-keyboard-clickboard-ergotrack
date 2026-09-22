@@ -45,7 +45,7 @@
         #input-processor-cells = <0>;
         type = <INPUT_EV_KEY>;
         codes = <INPUT_BTN_7 INPUT_BTN_3 INPUT_BTN_4 INPUT_BTN_5 INPUT_BTN_6
-                 INPUT_BTN_SIDE INPUT_BTN_EXTRA>;
+                 INPUT_BTN_SIDE INPUT_BTN_EXTRA INPUT_BTN_8>;
         bindings = <
             &tp_to_pos 72
             &tp_to_pos 73
@@ -57,7 +57,12 @@
                どちら向きかはパッドの載せ方で決まる */
             &tp_to_pos 79
             &tp_to_pos 80
+            /* 指が乗っている間ホールド: BTN_8 はドライバのタッチ状態
+               (どちらかのパッドに指がある間 1)。最初の指で押し、最後の指が
+               離れたら放す。held-codes なので dual_pad にもそのまま届く */
+            &tp_to_pos 78
         >;
+        held-codes = <INPUT_BTN_8>;
     };
 
     /* 実行時に倍率を変えられるスケーラ(値はsettingsに保存され再起動後も維持) */

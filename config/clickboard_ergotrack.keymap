@@ -14,6 +14,17 @@
     };
 
     behaviors {
+        /* 「指が乗っている間ホールド」(pos78)に置くための、キーとマウスボタンを
+           同時に押し続けるビヘイビア。&tp_hold LSHIFT MB3 で Shift+中ボタン。
+           どちらか片方だけなら 0 を入れる(&tp_hold LCTRL 0)。
+           アプリでは第1引数がキー、第2引数がマウスボタンとして出る。 */
+        tp_hold: tp_hold {
+            compatible = "zmk,behavior-press-both";
+            #binding-cells = <2>;
+            display-name = "Key + Mouse Button";
+            bindings = <&kp>, <&mkp>;
+        };
+
         /* 実行中にポインタ/スクロール速度を変えるビヘイビア */
         zip_dyn_scale: zip_dyn_scale {
             compatible = "zmk,behavior-zip-dynamic-scale";
@@ -232,7 +243,7 @@
             &kp F15        /* pos75 3本指スワイプ BTN_5 */
             &kp F16        /* pos76 3本指スワイプ BTN_6 */
             &kp LCTRL      /* pos77 ズーム中に保持する修飾キー。このMacはCtrl↔Cmd入れ替え設定なのでLCTRLがCmdとして届く。WindowsではそのままCtrl */
-            &none          /* pos78 未使用(2本指トリガーの両手連携は廃止) */
+            &none          /* pos78 指が乗っている間ホールド。レイヤーごとに &tp_hold LSHIFT MB3 のように置く */
             /* pos79/pos80: 2本指横スワイプ。どちらが左でどちらが右かはパッドの
                載せ方で決まるので、実機で確かめて必要なら入れ替えること。
                ここでは macOS のブラウザの「戻る/進む」を入れてある。
