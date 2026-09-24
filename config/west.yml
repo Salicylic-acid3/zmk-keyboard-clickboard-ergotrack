@@ -39,19 +39,21 @@ manifest:
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
     # 2026-09 からフォーク(SHA固定): cormoran の v4.1.0+zmk-fixes+nrf-half-duplex-uart
-    # に 2 コミットを載せたもの。どちらも BLE 使用中に lll_prepare_resolve() の
-    # アサートで落ちる(watchdog の「クラッシュ」)のを直す:
+    # に 3 コミットを載せたもの。1・2 は BLE 使用中に lll_prepare_resolve() の
+    # アサートで落ちる(watchdog の「クラッシュ」)のを直す。3 は電池:
     #   1. 上流 93b951d6f "Fix prepare pipeline overflow in observer role":
     #      resume イベントの重複が prepare パイプラインに溜まるバグ。
     #   2. EVENT_PIPELINE_MAX 7→16 (lll.h): 上流の 7 は「スキャナ2+広告1+他1」の
     #      前提で、ホスト接続+左半身接続+広告+スキャンを同時に走らせる右半身では
     #      起動直後やリンク切断直後に溢れる(LL_ASSERT(next))。
+    #   3. BT_LE_SCAN_PASSIVE を 8% デューティに (bluetooth.h): 左が居ない間の
+    #      右のスキャンが 50%(約2.5mA)だと CR2032 が1週間で空く。電池対策。
     # cormoran 側のブランチが進んだら、フォークのブランチをそこへ rebase して
     # SHA を貼り直す。上流に取り込まれたら cormoran 追従に戻す。
     #   フォークのブランチ: v4.1.0+zmk-fixes+nrf-half-duplex-uart+lll-pipeline-fix
     - name: zephyr
       remote: salicylic-acid3
-      revision: bcde8cd0a5db6bcd8093a40c910a27c36cf6b08d
+      revision: c86412dcf2889b13a925a7bc2d0c347ab5b3d115
       clone-depth: 1
       import:
         name-blocklist:
