@@ -106,7 +106,7 @@ manifest:
     - name: zmk-feature-runtime-tap-dance
       remote: salicylic-acid3
       # branch: master
-      revision: df05361247f4d8582245f94b3389ad81fd7ad3ad
+      revision: 5fdf0a701562acbd69810018b5962f455be9629e
     # 左右それぞれの電池残量をアプリへ。ZMK本体はBLEのBattery Service経由でしか
     # 出さないので、USB接続だと見えない。不調を追っているときはUSBに繋いでいる。
     - name: zmk-feature-battery-report
