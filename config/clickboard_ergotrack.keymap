@@ -25,15 +25,22 @@
             bindings = <&kp>, <&mkp>;
         };
 
-        /* 実行中にポインタ/スクロール速度を変えるビヘイビア */
+        /* 実行中にポインタ/スクロール速度を変えるビヘイビア。
+           display-name はアプリの割り当て一覧に出る名前(これが無いと内部名の
+           zip_dyn_scale がそのまま並ぶ)。アプリ側はこの名前でマウス分類に
+           入れて説明を付けるので、変えるときはアプリの behaviorMetadata.ts も
+           合わせる。引数の選択肢(カーソル/スクロール/両方、速く/遅く/リセット)
+           はドライバの behavior_zip_dynamic_scale.c がファームから渡す。 */
         zip_dyn_scale: zip_dyn_scale {
             compatible = "zmk,behavior-zip-dynamic-scale";
             #binding-cells = <2>;
+            display-name = "Pointer Speed Adjust";
         };
 
         zip_dyn_scale_set: zip_dyn_scale_set {
             compatible = "zmk,behavior-zip-dynamic-scale-set";
             #binding-cells = <2>;
+            display-name = "Pointer Speed Set";
         };
 
         /* トラックパッドの下のタクトスイッチ用の左クリック(ドライバの
