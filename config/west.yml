@@ -32,13 +32,16 @@ manifest:
       url-base: https://github.com/Salicylic-acid3
   projects:
     # ZMK: Salicylic-acid3 fork = cormoran main+dya + Studio notifications
-    #   that never wait forever for the host (branch main+dya+rpc-nonblocking).
+    #   that never wait forever for the host, + full-duty peripheral scanning
+    #   for 20 s after boot / after the left drops (the 8% duty cycle alone
+    #   made the left take seconds to reconnect after deep sleep)
+    #   (branch main+dya+rpc-nonblocking).
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: b93e147345214d416ba4c28f3b025f0c0fb46494
+      revision: a2c790f0f01adaa25b8dddaa950f5a9172860511
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
@@ -88,7 +91,7 @@ manifest:
     - name: zmk-driver-iqs9151
       remote: salicylic-acid3
       # branch: ergotrack
-      revision: f16c1a88b27f5aab7e12d4143ff7b8cb01d7c2b9
+      revision: 838755fe30d977888ca063e736867e9a5523bc8a
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
       revision: main
