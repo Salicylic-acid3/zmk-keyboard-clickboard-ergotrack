@@ -88,7 +88,7 @@ manifest:
     - name: zmk-driver-iqs9151
       remote: salicylic-acid3
       # branch: ergotrack
-      revision: f2ed2b779c41464e740cc192e2e38d0c7de73339
+      revision: f16c1a88b27f5aab7e12d4143ff7b8cb01d7c2b9
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
       revision: main
