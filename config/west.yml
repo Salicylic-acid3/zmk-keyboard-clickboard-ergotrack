@@ -41,7 +41,7 @@ manifest:
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: c82a8bbb93fc9df59e249e7744596c42551640f7
+      revision: e84ffe9b73de31b44ace2a2ef6b7abb3b857d49e
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
