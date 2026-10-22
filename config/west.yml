@@ -35,13 +35,15 @@ manifest:
     #   that never wait forever for the host, + full-duty peripheral scanning
     #   for 20 s after boot / after the left drops (the 8% duty cycle alone
     #   made the left take seconds to reconnect after deep sleep)
+    #   + a split link that slows to 60 ms while nothing is being typed or
+    #   pointed (CONFIG_ZMK_SPLIT_BLE_PACED; the right half's battery)
     #   (branch main+dya+rpc-nonblocking).
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: 3452e68f031b96458aa29a3ee12c2fd6ff27576b
+      revision: 3a78ccb8e529d9ef021584d2ea495238b785ccf3
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
