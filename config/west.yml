@@ -37,13 +37,15 @@ manifest:
     #   made the left take seconds to reconnect after deep sleep)
     #   + a split link that slows to 60 ms while nothing is being typed or
     #   pointed (CONFIG_ZMK_SPLIT_BLE_PACED; the right half's battery)
+    #   + the active BLE profile is saved the moment it changes, so a deep
+    #   sleep brings the keyboard back on the profile it was using
     #   (branch main+dya+rpc-nonblocking).
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: 3a78ccb8e529d9ef021584d2ea495238b785ccf3
+      revision: f8a4b42d9a197a167e48fac54115f6ad3a2e6c58
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
