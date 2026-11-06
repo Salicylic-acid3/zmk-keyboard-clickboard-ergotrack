@@ -39,13 +39,15 @@ manifest:
     #   pointed (CONFIG_ZMK_SPLIT_BLE_PACED; the right half's battery)
     #   + the active BLE profile is saved the moment it changes, so a deep
     #   sleep brings the keyboard back on the profile it was using
+    #   + a second, longer release-debounce window for keys that have been
+    #   held (debounce-release-held-ms; mouse-switch chatter while holding)
     #   (branch main+dya+rpc-nonblocking).
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: f8a4b42d9a197a167e48fac54115f6ad3a2e6c58
+      revision: 2a5ba3dc534554e092c1f9190741e9fc654590c7
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
