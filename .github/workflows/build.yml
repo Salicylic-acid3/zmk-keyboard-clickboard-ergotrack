@@ -205,8 +205,12 @@ jobs:
   # (upstream only appends "-zmk" when artifact-name is absent), so they stay
   # identical release to release and the permalinks keep working.
   #
-  # Only *.uf2 is published; the .elf/.map stay in the Actions artifact, where
-  # they are useful for debugging but do not clutter the download page.
+  # The .elf and .map are published next to the .uf2 (as a .zip per release,
+  # so the download page stays readable). Actions artifacts need a signed-in
+  # GitHub account and expire, and the watchdog incidents the keyboard records
+  # (PC / LR / stack frames) are only addresses: without the ELF of the build
+  # that was running, they resolve to nothing. With it:
+  #   arm-none-eabi-addr2line -f -C -e clickboard_ergotrack_right.elf 0x0002b23a
   release:
     if: startsWith(github.ref, 'refs/tags/')
     needs: merge
@@ -223,6 +227,12 @@ jobs:
       - name: List what will be published
         run: ls -l firmware
 
+      - name: Bundle the symbol files
+        run: |
+          cd firmware
+          zip -q "symbols-${GITHUB_REF_NAME}.zip" *.elf *.map
+          ls -l "symbols-${GITHUB_REF_NAME}.zip"
+
       - name: Publish the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -233,7 +243,7 @@ jobs:
         run: |
           # Idempotent so a re-run of a failed release job doesn't error out.
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" firmware/*.uf2 --clobber
+            gh release upload "$GITHUB_REF_NAME" firmware/*.uf2 firmware/symbols-*.zip --clobber
           else
-            gh release create "$GITHUB_REF_NAME" firmware/*.uf2 --generate-notes
+            gh release create "$GITHUB_REF_NAME" firmware/*.uf2 firmware/symbols-*.zip --generate-notes
           fi
