@@ -1,14 +1,27 @@
+# マイコンボードは usu-aoba。リビジョンでトラックパッドのピンと電池の測定
+# ピンが違う(boards/arm/acdb/board.yml)。**違うリビジョン用を焼くと
+# トラックパッドが動かない。** 20pコネクタ(キー)は同じなのでキーは打てる。
+#   rev.1 (acdb@1.0.0) → いつもの名前。アプリのダウンロードページもこれ
+#   rev.0 (acdb@0.0.0) → 名前の末尾に _rev0
+# settings_reset はリビジョンに関係なく使える(設定の保存領域は同じ)。
 include:
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_left
     artifact-name: clickboard_ergotrack_left
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right
     snippet: studio-rpc-usb-uart
-  - board: acdb
+  - board: acdb@1.0.0
     shield: settings_reset
     artifact-name: settings_reset
+  - board: acdb@0.0.0
+    shield: clickboard_ergotrack_left
+    artifact-name: clickboard_ergotrack_left_rev0
+  - board: acdb@0.0.0
+    shield: clickboard_ergotrack_right
+    artifact-name: clickboard_ergotrack_right_rev0
+    snippet: studio-rpc-usb-uart
 
   # --- 調査用ビルド（常用しないこと） ---
   #
@@ -28,7 +41,7 @@ include:
   #    左が落ちているなら、右のログに「ペリフェラルが切れた」として現れる。
   #    右が落ちているなら、ログはそこで途切れてUSBごと消える。
   #    この2つを見分けるのが第一の目的。
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right_devtool
     snippet: studio-rpc-usb-uart
@@ -64,7 +77,7 @@ include:
   #         詰まって餌やりが止まったスレッド」で、スタックの話ではない
   #       - 変わらず消える → ウォッチドッグではない。フォールトかUSB側
   #     どちらに転んでも探す場所が半分になる。
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right_devtool_nowdt
     snippet: studio-rpc-usb-uart
@@ -76,11 +89,11 @@ include:
   #    繋がれば原因の場所が確定するうえ、原因を追っている間も
   #    キーボードが普通に使える(失うのは「両半身へ一度に書く」だけ)。
   #    左右そろえて焼くこと。片方だけだと、片方が転送しもう片方が受けない。
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_left
     artifact-name: clickboard_ergotrack_left_norelay
     cmake-args: -DCONFIG_ZMK_CUSTOM_SETTINGS_SPLIT_RPC_RELAY=n
-  - board: acdb
+  - board: acdb@1.0.0
     shield: clickboard_ergotrack_right
     artifact-name: clickboard_ergotrack_right_norelay
     snippet: studio-rpc-usb-uart

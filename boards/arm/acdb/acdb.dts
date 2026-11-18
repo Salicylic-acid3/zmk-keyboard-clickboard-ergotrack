@@ -9,6 +9,15 @@
 #include <nordic/nrf52840_qiaa.dtsi>
 #include <common/nordic/nrf52840_uf2_boot_mode.dtsi>
 
+/* Pin `pin` (1-4) of the 6-pin extension connector, for a pinctrl `psels`:
+ * ACDB_EXT1_PSEL(1, TWIM_SDA). Pins 1-4 are connector pins 2-5 (1 is GND,
+ * 6 is 3.3 V). Which nRF pin each one is depends on the board revision, so
+ * the numbers are defined in acdb_<revision>.overlay; a shield refers to the
+ * connector, never to P0.xx. For a GPIO, use <&acdb_ext1 pin flags>. */
+#define _ACDB_EXT1_PSEL(pin, fn) \
+    NRF_PSEL(fn, ACDB_EXT1_PIN##pin##_PORT, ACDB_EXT1_PIN##pin##_NUMBER)
+#define ACDB_EXT1_PSEL(pin, fn) _ACDB_EXT1_PSEL(pin, fn)
+
 / {
     model = "ACDB";
 
@@ -19,9 +28,10 @@
         zmk,battery = &vbatt;
     };
 
+    /* io-channels is per revision (acdb_<revision>.overlay): rev.1 measures
+     * the battery itself, rev.0 can only measure VDD. */
     vbatt: vbatt {
         compatible = "zmk,non-lipo-battery";
-        io-channels = <&adc 2>;
     };
 
 	akdk_d: connector {
@@ -48,6 +58,14 @@
 			, <17 0 &gpio1 15 0>
 			, <18 0 &gpio1 13 0>
 			;
+	};
+
+	/* The 6-pin extension connector (KDK-Link): the trackpad's on ErgoTrack.
+	 * Its gpio-map is per revision (acdb_<revision>.overlay). */
+	acdb_ext1: extension-connector-1 {
+		#gpio-cells = <2>;
+		gpio-map-mask = <0xffffffff 0xffffffc0>;
+		gpio-map-pass-thru = <0 0x3f>;
 	};
 };
 
