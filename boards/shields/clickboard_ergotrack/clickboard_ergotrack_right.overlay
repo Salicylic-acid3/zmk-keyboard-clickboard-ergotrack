@@ -375,5 +375,5 @@
 };
 
 /* 電池の測定ピンはボードのリビジョンで決まる(boards/arm/acdb/
- * acdb_<revision>.overlay)。rev.1 は電池そのものを AIN4 で、rev.0 は VDD
- * (昇圧の後ろ)しか測れない。ここで上書きしないこと。 */
+ * acdb_<revision>.overlay)。rev.1 は電池そのものを AIN4 で測る。
+ * ここで上書きしないこと。 */

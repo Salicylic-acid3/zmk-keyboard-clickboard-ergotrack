@@ -29,7 +29,7 @@
     };
 
     /* io-channels is per revision (acdb_<revision>.overlay): rev.1 measures
-     * the battery itself, rev.0 can only measure VDD. */
+     * the battery itself on AIN4. */
     vbatt: vbatt {
         compatible = "zmk,non-lipo-battery";
     };

@@ -3,15 +3,15 @@ board:
   vendor: sekigon
   socs:
     - name: nrf52840
-  # The revisions follow usu-aoba's (sekigon-gonnoc/usu-aoba), which this board
-  # is: 0.0.0 = usu-aoba rev.0 (the "ACDB" prototype), 1.0.0 = usu-aoba rev.1.
-  # The 20-pin connector is the same on both; the extension connector and the
-  # battery pin are not -- see acdb_<revision>.overlay. A bare "acdb" builds
-  # rev.1. A build for one revision does not work on the other: the trackpad
-  # is on different pins.
+  # The revision follows usu-aoba's (sekigon-gonnoc/usu-aoba), which this board
+  # is: 1.0.0 = usu-aoba rev.1, whose pins are in acdb_1_0_0.overlay. rev.0
+  # (the "ACDB" prototype: the extension connector on GPIO7-10, no battery
+  # pin) was dropped after v0.9.9.10.13; its overlay is in the history as
+  # acdb_0_0_0.overlay should a rev.0 board ever need a build again. A build
+  # for one revision does not work on the other: the trackpad is on
+  # different pins.
   revision:
     format: major.minor.patch
     default: 1.0.0
     revisions:
-      - name: 0.0.0
       - name: 1.0.0
