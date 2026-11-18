@@ -13,6 +13,22 @@ include:
     shield: settings_reset
     artifact-name: settings_reset
 
+  # --- 調査用(一時的。左の設定がアプリに出ない件) ---
+  # 右(セントラル)のログをアプリの「デバッグツール」へ。WRN 以上だけ
+  # (INF/DBG にするとログの通知がまたログを生んで自己増殖する。97be19b 参照)。
+  - board: acdb@1.0.0
+    shield: clickboard_ergotrack_right
+    artifact-name: clickboard_ergotrack_right_devtool
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_LOG_MAX_LEVEL=2
+  # 左(ペリフェラル)のログを USB シリアルへ。Mac の screen で読む。
+  # こちらは devtool を通らないので INF まで出しても増殖しない。
+  - board: acdb@1.0.0
+    shield: clickboard_ergotrack_left
+    artifact-name: clickboard_ergotrack_left_usblog
+    snippet: zmk-usb-logging
+    cmake-args: -DCONFIG_LOG_MAX_LEVEL=3
+
 # 調査用ビルド(devtool / devtool_nowdt / norelay)は、ビルド時間を縮めるため
 # 外した(2026-11-18)。普段は上の 3 つだけ。要るときは下を include: に足して
 # push し、終わったら消す。他の組み合わせと説明は 97be19b の build.yaml にある。
