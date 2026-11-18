@@ -13,78 +13,13 @@ include:
     shield: settings_reset
     artifact-name: settings_reset
 
-  # --- 調査用ビルド（常用しないこと） ---
-  #
-  # 「アプリに接続すると落ちる」を推測で追うのをやめるための2組。
-  # どちらも普段使いのファームとは別物として出てくるので、間違えて焼いても
-  # 上の3つを焼き直せば戻れる。
-
-  # 1) devtool 入り。**キーボード自身のログとスレッドごとのスタック使用量**を
-  #    アプリのDevtoolウィンドウへ流す。
-  #    - LOG_CAPTURE は Zephyr のログをRAMのリングに溜めてRPCで返す。
-  #      STREAMING が既定でオンなので、落ちる直前までの行は届く。
-  #    - STACK_USAGE は INIT_STACKS でスタックを塗ってから高水位を測るので、
-  #      「どのスレッドがあと何バイトだったか」が数字で出る。もうスタックを
-  #      当てにいく必要がなくなる。
-  #    STACK_USAGE / LOG_CAPTURE は ZMK_DEVTOOL_STUDIO_RPC の下にあり、それは
-  #    ZMK_STUDIO を要求する。**つまりセントラル(右)でしか動かない。**
-  #    左が落ちているなら、右のログに「ペリフェラルが切れた」として現れる。
-  #    右が落ちているなら、ログはそこで途切れてUSBごと消える。
-  #    この2つを見分けるのが第一の目的。
-  - board: acdb@1.0.0
-    shield: clickboard_ergotrack_right
-    artifact-name: clickboard_ergotrack_right_devtool
-    snippet: studio-rpc-usb-uart
-    #     **ログは WRN 以上だけをコンパイルする**(-DCONFIG_LOG_MAX_LEVEL=2)。
-    #     -DCONFIG_ZMK_LOG_LEVEL_WRN=y だけでは効かなかった: zmk の DBG 行
-    #     (zmk_rpc_custom_subsystem_encode_response_payload など)が届き続け、
-    #     アプリが設定を読むたびにその応答のログが捕捉され、それを流す通知が
-    #     またログを生む(自己増殖)。Chrome が落ちるほど溜まったのはこれ。
-    #     さらに Zephyr のログ本体は自動起動のバックエンドを初期化のあとで
-    #     LOG_MAX_LEVEL で有効化し直すので、devtool 側の「既定は INF まで」も
-    #     上書きされる。LOG_MAX_LEVEL はマクロ段階の上限で、どのモジュールの
-    #     どの設定より強い。tp / m(地図) / eqs(探索) / SHOW_RESET / restored の
-    #     行はすべて WRN なので残る。
-    #     ログ 1 行は **47 文字**で切られる(devtool の LogRecord.message)。
-    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_INPUT_IQS9151_MOTION_TRACE=y -DCONFIG_LOG_MAX_LEVEL=2
-
-  # 1a) 上と同じ + **トラックパッドの動きの生ログ**(MOTION_TRACE)。
-  #     「一定速度で動かしているのに周期的に減速する」を、ICが位置を握って
-  #     まとめて放しているのか、ドライバがフレームを取りこぼしているのかで
-  #     見分けるための行。動いたフレーム1つにつき WRN 1行:
-  #       tp +<前回読みからのms> q<間に読んだ動きなしフレーム数> x<絶対X> y<絶対Y> r<生の相対X>,<生の相対Y> m<移動フラグ> i<infoフラグ>
-  #     +5 で q>0 が並ぶ → ICが止めてから跳んでいる(センサ側)
-  #     +30 前後で q=0 が並ぶ → フレームを読めていない(ドライバ/キュー側)
-
-  # 1b) devtool + **ウォッチドッグ無し**（セントラル）。
-  #     落ちるときファームは ERR も WRN も一行も残していない。ただし
-  #     Zephyr の致命的エラー(MPUによるスタック保護を含む)は
-  #     "***** MPU FAULT *****" を出してからリセットするので、本当に何も
-  #     出ていないなら**フォールトではない**可能性がある。
-  #     一方**ウォッチドッグのリセットは何も残さない** — CPUが黙って再起動する。
-  #     だからこれを切って挙動が変わるかを見る:
-  #       - 落ちなくなる/固まるだけになる → **ハングだった**。犯人は「どこかで
-  #         詰まって餌やりが止まったスレッド」で、スタックの話ではない
-  #       - 変わらず消える → ウォッチドッグではない。フォールトかUSB側
-  #     どちらに転んでも探す場所が半分になる。
-  - board: acdb@1.0.0
-    shield: clickboard_ergotrack_right
-    artifact-name: clickboard_ergotrack_right_devtool_nowdt
-    snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_ZMK_WATCHDOG=n -DCONFIG_ZMK_WATCHDOG_STUDIO_RPC=n
-
-  # 2) リレー無し。左右それぞれが自分の設定だけを持ち、セントラルは
-  #    ペリフェラルへ設定RPCを転送しない。
-  #    落ちるのがリレーの往復だという読みが当たっていれば、**これで繋がる**。
-  #    繋がれば原因の場所が確定するうえ、原因を追っている間も
-  #    キーボードが普通に使える(失うのは「両半身へ一度に書く」だけ)。
-  #    左右そろえて焼くこと。片方だけだと、片方が転送しもう片方が受けない。
-  - board: acdb@1.0.0
-    shield: clickboard_ergotrack_left
-    artifact-name: clickboard_ergotrack_left_norelay
-    cmake-args: -DCONFIG_ZMK_CUSTOM_SETTINGS_SPLIT_RPC_RELAY=n
-  - board: acdb@1.0.0
-    shield: clickboard_ergotrack_right
-    artifact-name: clickboard_ergotrack_right_norelay
-    snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_CUSTOM_SETTINGS_SPLIT_RPC_RELAY=n
+# 調査用ビルド(devtool / devtool_nowdt / norelay)は、ビルド時間を縮めるため
+# 外した(2026-11-18)。普段は上の 3 つだけ。要るときは下を include: に足して
+# push し、終わったら消す。他の組み合わせと説明は 97be19b の build.yaml にある。
+#
+#  # 右(セントラル)のログとスタック使用量をアプリの Devtool ウィンドウへ
+#  - board: acdb@1.0.0
+#    shield: clickboard_ergotrack_right
+#    artifact-name: clickboard_ergotrack_right_devtool
+#    snippet: studio-rpc-usb-uart
+#    cmake-args: -DCONFIG_ZMK_DEVTOOL=y -DCONFIG_ZMK_DEVTOOL_STUDIO_RPC=y -DCONFIG_ZMK_DEVTOOL_LOG_CAPTURE=y -DCONFIG_ZMK_DEVTOOL_STACK_USAGE=y -DCONFIG_LOG_MAX_LEVEL=2
