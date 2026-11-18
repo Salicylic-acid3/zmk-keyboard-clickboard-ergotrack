@@ -41,13 +41,16 @@ manifest:
     #   sleep brings the keyboard back on the profile it was using
     #   + a second, longer release-debounce window for keys that have been
     #   held (debounce-release-held-ms; mouse-switch chatter while holding)
+    #   + relay events to the left half written from a work queue of their
+    #   own (1e0f7ea): from the system work queue the multi-chunk ones were
+    #   dropped, so nothing the app set on "both halves" reached the left
     #   (branch main+dya+rpc-nonblocking).
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: 2a5ba3dc534554e092c1f9190741e9fc654590c7
+      revision: 1e0f7eadf396eb57cb02272687c78cfe3401d7b8
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
