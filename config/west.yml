@@ -45,12 +45,15 @@ manifest:
     #   own (1e0f7ea): from the system work queue the multi-chunk ones were
     #   dropped, so nothing the app set on "both halves" reached the left
     #   (branch main+dya+rpc-nonblocking).
+    #   + ZMK_SPLIT_RELAY_EVENT_DATA_LEN capped at 255 (ceefef7). The relay
+    #   header holds the data length in one byte; at 256 the custom-settings
+    #   relay went out as length 0 and the left dropped every request.
     #   Move to the fork's new SHA after rebasing it onto cormoran's branch.
     - name: zmk
       remote: salicylic-acid3
       import: app/west.yml
       clone-depth: 1
-      revision: 1e0f7eadf396eb57cb02272687c78cfe3401d7b8
+      revision: ceefef7baf4d7d40b8628d1a84a42bd1d19269cd
     # Required by cormoran/zmk#main+dya: patched Zephyr (also carries the
     # nRF half-duplex UART fixes this split keyboard's wired link needs).
     #
