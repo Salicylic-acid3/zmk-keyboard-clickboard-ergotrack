@@ -441,7 +441,11 @@
             >;
         };
 
-        /* ZMK Studio から使うための空きレイヤー枠 */
+        /* ZMK Studio から使うための空きレイヤー枠。基本 3 + 予備 13 = 16 層。
+         * 予備は書き換えたぶんだけ保存領域を使う(1 層まるごと書き換えると
+         * 約 3.5 KB)。全部埋めると 64 KB の保存領域が足りなくなりうるので、
+         * トラブルシューティングの「設定の保存領域」を見ながら使う。
+         * ZMK の上限は 32(レイヤー状態が 32 ビット)。 */
         extra1 { status = "reserved"; };
         extra2 { status = "reserved"; };
         extra3 { status = "reserved"; };
@@ -450,5 +454,10 @@
         extra6 { status = "reserved"; };
         extra7 { status = "reserved"; };
         extra8 { status = "reserved"; };
+        extra9 { status = "reserved"; };
+        extra10 { status = "reserved"; };
+        extra11 { status = "reserved"; };
+        extra12 { status = "reserved"; };
+        extra13 { status = "reserved"; };
     };
 };
